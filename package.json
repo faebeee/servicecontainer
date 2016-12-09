@@ -1,0 +1,30 @@
+{
+  "name": "servicecontainer",
+  "description": "A Symfony2 inspired depdendency injection container for node",
+  "version": "0.1.0",
+  "author": {
+    "name": "Fabio Gianini"
+  },
+  "contributors": [],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:faebeee/servicecontainer.git"
+  },
+  "main": "ServiceContainer.js",
+  "directories": {
+    "lib": "./lib",
+    "example": "./example"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/faebeee/servicecontainer/blob/master/LICENSE"
+    }
+  ],
+  "engines": {
+    "node": ">=0.8.17"
+  },
+  "dependencies": {
+    "unit.js": "^2.0.0"
+  }
+}
