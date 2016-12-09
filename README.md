@@ -105,5 +105,5 @@ now that the container has been created you can access your services
 
 Or access the parameter
 
-    container.get('testService')
+    container.getParameter('testServiceFile')
     
