@@ -67,14 +67,15 @@ Now that we create all the services we need to create the container.
 
 Therefore we need to create a new `Builder` instance like this
 
-    let Builder = require('@faebeee/service-container');
+    let Builder = require('@faebeee/service-container').Builder;
 
     let builder = new Builder(
       require('./Config/Services.json'),
-      __dirname+"/services"
+      __dirname+"/Config/"
     );
 
-The first argument is a json object that stores all your service configuration. 
+The first argument is a json object that stores all your service configuration.
+The second one is the path pointing to the configuration folder. This is used to fetch your services. 
 You can also pass a json object directly
 
     let builder = new Builder(

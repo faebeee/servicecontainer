@@ -55,10 +55,19 @@ module.exports = class Container {
         }    
 
         if(!classFile){
-            throw new Error('Class is not defined in config');
+            throw new Error('File is not defined in config');
         }
 
-        classFile = def.rootDir + classFile.replace('./', '/');
+        // Check if the class file path is relative or absolute
+        classFile = classFile.replace(/^\.\.\//, './../');
+        if (/^\.\//.test(classFile)) {
+            // Remove references to the root dir
+            classFile = def.rootDir + classFile.replace('./', '/');
+        }
+        
+
+        //classFile = def.rootDir + classFile.replace('./', '/');
+        
 
         def.class = require(classFile);
         
