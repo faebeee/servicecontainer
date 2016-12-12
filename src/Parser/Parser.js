@@ -13,7 +13,8 @@ module.exports = class Parser{
      * @param {any} data
      * @param {any} container
      */
-    parse(data, container, rootDir) {
+    parse(data, container, rootDir, initClasses) {
+        initClasses = initClasses || false;
         if (data.services === undefined) {
             throw 'No services configured';
         }
@@ -21,7 +22,10 @@ module.exports = class Parser{
         this.loadImport(data, container, rootDir);
         this.loadParameters(data, container);
         this.loadServices(data, container, rootDir);
-        container.instanciateClasses()
+
+        if (initClasses === true) {
+            container.instanciateClasses()
+        }    
     }
 
 
@@ -91,9 +95,6 @@ module.exports = class Parser{
         if (data.imports === undefined || data.imports === null) {
             return;
         }    
-
-
-        console.log(rootDir);
 
         let imports = data.imports;
         let keys = Object.keys(imports);

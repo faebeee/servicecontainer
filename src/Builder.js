@@ -14,7 +14,7 @@ module.exports = class Builder{
     build(  ) {
         let container = new Container();
 
-        this.parser.parse(this.servicesJson, container, this.rootDir);
+        this.parser.parse(this.servicesJson, container, this.rootDir, true);
 
         return container;
     }
