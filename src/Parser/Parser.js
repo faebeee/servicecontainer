@@ -46,7 +46,7 @@ module.exports = class Parser{
         let def = new Definition();
         
         def.file = serviceConf.file;
-        def.arguments = serviceConf.arguments;
+        def.arguments = serviceConf.arguments || [];
         def.rootDir = rootDir;
         def.isClass = serviceConf.isClass;
         def.isObject = serviceConf.isObject;
