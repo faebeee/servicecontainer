@@ -21,6 +21,7 @@ module.exports = class Parser{
         this.loadImport(data, container, rootDir);
         this.loadParameters(data, container);
         this.loadServices(data, container, rootDir);
+        container.instanciateClasses()
     }
 
 

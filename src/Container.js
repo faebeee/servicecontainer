@@ -6,6 +6,7 @@ module.exports = class Container {
         this.services = {};
         this.definitions = {};
         this.parameters = {};
+        this.instanciate = [];
     }    
 
     /**
@@ -28,6 +29,17 @@ module.exports = class Container {
         this.definitions[name] = definition;
 
         if (definition.isClass === true) {
+            this.instanciate.push(name);
+        }
+    }
+
+    /**
+     * Instanciate all classes with property isClass
+     */
+    instanciateClasses() {
+        let list = this.instanciate;
+        for (let i = 0; i < list.length; i++){
+            let name = list[i];
             this.createService(name);
         }
     }
