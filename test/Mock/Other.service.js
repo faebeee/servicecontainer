@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = class OtherService{
-    constructor( testService ) {
+    constructor(testService) {
         this.service = testService;
     }
 }

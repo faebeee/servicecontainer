@@ -60,12 +60,30 @@ describe('Builder', function () {
     });
 
 
+    it ('Service with inheritance should work', function () {
+        let builder = new Builder(
+            {
+                services: {
+                    "testService": {
+                        "file": "./Mock/Inherit.service.js",
+                        "arguments" : []
+                    }
+                }
+            },
+            __dirname+'/./'
+        );
+
+        let container = builder.build();
+        unit.object(container.get('testService')).isNot(null);
+    });
+
+
     it ('referencing a not existent service should throw an error', function () {
         let builder = new Builder(
             {
                 parameters: {
-                    "testServiceFile" : "Mock/Mock.service.js",
-                    "otherFile" : "Mock/Other.service.js"
+                    "testServiceFile" : "./Mock/Mock.service.js",
+                    "otherFile" : "./Mock/Other.service.js"
                 },
                 services: {
                     "testService": {
@@ -79,7 +97,7 @@ describe('Builder', function () {
                     }
                 }
             },
-            __dirname+'/./'
+            __dirname+"/"
         );
 
         let container = builder.build();
@@ -113,7 +131,7 @@ describe('Builder', function () {
                     }
                 }
             },
-            __dirname+'/./'
+            __dirname
         );
 
         let container = builder.build();
@@ -158,13 +176,12 @@ describe('Builder', function () {
 
     });
 
-
     it ('instanciate used services', function () {
         let builder = new Builder(
             {
                 parameters: {
-                    "testServiceFile" : "Mock/Mock.service.js",
-                    "otherFile" : "Mock/Other.service.js"
+                    "testServiceFile" : "./Mock/Mock.service.js",
+                    "otherFile" : "./Mock/Other.service.js"
                 },
                 services: {
                     "otherService": {
@@ -178,7 +195,7 @@ describe('Builder', function () {
                     
                 }
             },
-            __dirname+'/./'
+            __dirname+"/./"
         );
 
         let container = builder.build();
@@ -213,7 +230,7 @@ describe('Builder', function () {
         );
 
         let container = builder.build();
-
+        
         unit.string(container.getParameter('testServiceFile')).is('Mock/Mock.service.js');
         unit.string(container.getParameter('otherFile')).is('Mock/Other.service.js');
     });

@@ -24,8 +24,12 @@ module.exports = class Container {
      * @param {String} name
      * @param {Definition} definition
      */
-    addDefinition( name, definition) {
+    addDefinition(name, definition) {
         this.definitions[name] = definition;
+
+        if (definition.isObject === true) {
+            this.createService(name);
+        }
     }
 
     /**
@@ -72,13 +76,39 @@ module.exports = class Container {
         let _arguments = this.constructArguments(def.arguments);
     
         let serviceClass = def.class;
-        let service = new (Function.prototype.bind.apply(serviceClass, [null].concat(_arguments)));
+        //let service = new (Function.prototype.bind.apply(serviceClass, [null].concat(_arguments)));
+
+
+      
+
+        //let service = new (Function.prototype.bind.apply(Service, [null].concat(_arguments)));
+        let service = this.create(serviceClass, _arguments);
+        
+
+
+
+
 
         this.services[name] = service;
 
         return service;
     }
     
+    create(obj, _arguments) {
+
+        var a = new (obj.bind.apply(obj, [null].concat(_arguments)))();
+        return  a;
+        // use 'new' operator to instantiate a 'Something' object
+        var tmp = new obj();
+
+        // If the interpreter supports [JavaScript 1.8.5][2], use 'Object.create'
+        // var tmp = Object.create(Something.prototype); 
+
+        // calling the constructor again to initialize the object
+        obj.apply(tmp, _arguments);
+        return tmp;
+    }
+
      /**
      * Construct the arguments as either services or parameters
      *

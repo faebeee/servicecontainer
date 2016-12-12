@@ -18,7 +18,7 @@ module.exports = class Parser{
             throw 'No services configured';
         }
 
-        this.loadImport(data, container);
+        this.loadImport(data, container, rootDir);
         this.loadParameters(data, container);
         this.loadServices(data, container, rootDir);
     }
@@ -85,17 +85,27 @@ module.exports = class Parser{
      * @param {any} container
      * @returns
      */
-    loadImport(data, container) {
+    loadImport(data, container, rootDir) {
         if (data.imports === undefined || data.imports === null) {
             return;
         }    
+
+
+        console.log(rootDir);
 
         let imports = data.imports;
         let keys = Object.keys(imports);
         for (let i = 0; i < keys.length; i++){
             let key = keys[i];
-            let value = imports[key];
-            this.parse(require(value), container)
+            let filePath = imports[key];
+
+             filePath = filePath.replace(/^\.\.\//, './../');
+            if (/^\.\//.test(filePath)) {
+                // Remove references to the root dir
+                filePath = rootDir + filePath.replace('./', '/');
+            }
+            
+            this.parse(require(filePath), container, rootDir)
         }   
     }
 }
