@@ -9,5 +9,6 @@ module.exports = class Definition{
         this.class = null;
         this.properties = null;
         this.calls = [];
+        this.tags = null;
     }
 }

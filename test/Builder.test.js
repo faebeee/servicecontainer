@@ -61,6 +61,24 @@ describe('Builder', function () {
     });
 
 
+     it ('container should handle objects', function () {
+        let builder = new Builder(
+            {
+                services: {
+                    "testService": {
+                        "file": "./Mock/Object.service.js",
+                        "isObject" : true
+                    }
+                }
+            },
+            __dirname+'/./'
+        );
+
+        let container = builder.build();
+        unit.object(container.get('testService')).isNot(null);
+        unit.string(container.get('testService').foo).is('bar');
+     });
+    
     it ('Service with inheritance should work', function () {
         let builder = new Builder(
             {

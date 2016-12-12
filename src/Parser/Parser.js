@@ -53,6 +53,7 @@ module.exports = class Parser{
         def.calls = serviceConf.calls;
         def.properties = serviceConf.properties;
         def.constructorMethod = serviceConf.constructorMethod;
+        def.tags = serviceConf.tags || [];
 
         return def;
     }

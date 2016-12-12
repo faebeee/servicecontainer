@@ -108,3 +108,43 @@ Or access the parameter
 
     container.getParameter('testServiceFile')
     
+
+# Config
+
+You can configure your services with the following options
+
+## import
+
+You can split your config into multiple files. Therefore you have to add the `imports` property to your json. This property is an array.
+In here you can add all your files
+
+    {
+        "imports" : [
+            "./EventListeners"
+        ],
+        "services" : {
+            "update" : {
+                "file" : "../Service/Update",
+                "isClass" : true,
+            },
+        ...
+
+## services
+
+Services have a couple of options. The basic is very simple and takes just a couple of lines
+
+    ...
+    "services" : {
+        "update" : {
+            "file" : "../Service/Update",
+        },
+    }
+    ...
+
+This defines a `class` that is instanciated when you call `container.get('update')`
+
+There options are also allowed
+
+- `isObject` {Boolean} defines if the file is a module or class.
+- `isClass` {Boolean} defines wether the class should be directly instanciated or not (for EventListeners or similar)
+- `arguments` {Array} is an array that will be passed into the constructor. here you can pass strings, service references with `@myOtherService` or parameters with '%myParameter%'

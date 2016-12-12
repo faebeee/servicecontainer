@@ -27,7 +27,7 @@ module.exports = class Container {
     addDefinition(name, definition) {
         this.definitions[name] = definition;
 
-        if (definition.isObject === true) {
+        if (definition.isClass === true) {
             this.createService(name);
         }
     }
@@ -78,35 +78,30 @@ module.exports = class Container {
         let serviceClass = def.class;
         //let service = new (Function.prototype.bind.apply(serviceClass, [null].concat(_arguments)));
 
-
-      
-
         //let service = new (Function.prototype.bind.apply(Service, [null].concat(_arguments)));
-        let service = this.create(serviceClass, _arguments);
+        let service = null;
+
+        if (!def.isObject) {
+            service = this.create(serviceClass, _arguments);
+        } else {
+            service = serviceClass;
+        }    
         
-
-
-
-
-
         this.services[name] = service;
 
         return service;
     }
     
+    /**
+     * Create the service instance
+     * 
+     * @param {Class} obj the service that should be instanciated
+     * @param {String[]} _arguments array of arguments
+     * @returns {Object}
+     */
     create(obj, _arguments) {
-
         var a = new (obj.bind.apply(obj, [null].concat(_arguments)))();
         return  a;
-        // use 'new' operator to instantiate a 'Something' object
-        var tmp = new obj();
-
-        // If the interpreter supports [JavaScript 1.8.5][2], use 'Object.create'
-        // var tmp = Object.create(Something.prototype); 
-
-        // calling the constructor again to initialize the object
-        obj.apply(tmp, _arguments);
-        return tmp;
     }
 
      /**
