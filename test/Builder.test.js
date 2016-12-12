@@ -4,6 +4,7 @@ let unit = require('unit.js');
 
 let Builder = require('../src/Builder');
 let TestService = require('./Mock/Mock.service');
+let InheritService = require('./Mock/Inherit.service');
 
 
 
@@ -75,6 +76,8 @@ describe('Builder', function () {
 
         let container = builder.build();
         unit.object(container.get('testService')).isNot(null);
+        unit.object(container.get('testService')).isInstanceOf(TestService);
+        unit.object(container.get('testService')).isInstanceOf(InheritService);
     });
 
 
@@ -230,7 +233,7 @@ describe('Builder', function () {
         );
 
         let container = builder.build();
-        
+
         unit.string(container.getParameter('testServiceFile')).is('Mock/Mock.service.js');
         unit.string(container.getParameter('otherFile')).is('Mock/Other.service.js');
     });

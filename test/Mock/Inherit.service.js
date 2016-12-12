@@ -1,5 +1,7 @@
 'use strict';
 
-module.exports = class InheritService{
+let MockService = require('./Mock.service');
+
+module.exports = class InheritService extends MockService{
     
 }
