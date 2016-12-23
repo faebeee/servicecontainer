@@ -1,11 +1,14 @@
 'use strict';
 
+let ClassLoader = require('./ClassLoader');
+
 module.exports = class Container {
 
     constructor() {
         this.services = {};
         this.definitions = {};
         this.parameters = {};
+        this.classLoader = new ClassLoader();
     }    
 
     /**
@@ -25,76 +28,8 @@ module.exports = class Container {
      * @param {Definition} definition
      */
     addDefinition( name, definition) {
+        this.classLoader.loadClass(this, definition);
         this.definitions[name] = definition;
-    }
-
-    /**
-     * Create a new service instance
-     * 
-     * @param {String} name
-     * @returns {Object}
-     */
-    createService( name ) {
-        if (this.definitions[name] === undefined || this.definitions[name] === null) {
-            throw new Error('No definition for name ' + name);
-        }
-
-        if(this.services[name] !== null && this.services[name] !== undefined){
-            return this.services[name];
-        }
-
-        let def = this.definitions[name];
-        let classFile = null;
-
-        if (this.isArgumentALiteral(def.file)) {
-            classFile = def.file;
-        } else {
-            classFile = this.getParameter(
-                this.getParameterIdFromArgumentReference(def.file)
-            );
-        }    
-
-        if(!classFile){
-            throw new Error('File is not defined in config');
-        }
-
-        // Check if the class file path is relative or absolute
-        classFile = classFile.replace(/^\.\.\//, './../');
-        if (/^\.\//.test(classFile)) {
-            // Remove references to the root dir
-            classFile = def.rootDir + classFile.replace('./', '/');
-        }
-        
-
-        //classFile = def.rootDir + classFile.replace('./', '/');
-        
-
-        def.class = require(classFile);
-        
-        let _arguments = this.constructArguments(def.arguments);
-    
-        let serviceClass = def.class;
-        let service = new (Function.prototype.bind.apply(serviceClass, [null].concat(_arguments)));
-
-        this.services[name] = service;
-
-        return service;
-    }
-    
-     /**
-     * Construct the arguments as either services or parameters
-     *
-     * @param {Array} argumentReferences
-     * @param {Object} serviceTree A list of previously seen services while building the current service
-     * @returns {Array} An array of constructed arguments and parameters
-     */    
-    constructArguments (argumentReferences) {
-        let _arguments = [];
-        for (let i = 0; i < argumentReferences.length; i++) {
-            _arguments.push(this.constructArgument(argumentReferences[i]));
-        }
-
-        return _arguments;
     }
 
     /**
@@ -187,15 +122,52 @@ module.exports = class Container {
     }
 
     /**
+     * Create a new service instance
+     * 
+     * @param {String} name
+     * @returns {Object}
+     */
+    createService( name ) {
+        if (this.definitions[name] === undefined || this.definitions[name] === null) {
+            throw new Error('No definition for name ' + name);
+        }
+
+        if(this.services[name] !== null && this.services[name] !== undefined){
+            return this.services[name];
+        }
+
+        let def = this.definitions[name];
+        let _arguments = this.constructArguments(def.arguments);
+    
+
+        let serviceClass = def.class;
+        let service  = null;
+        
+        if(def.isObject === false){
+            service = new (Function.prototype.bind.apply(serviceClass, [null].concat(_arguments)));
+        }else{
+            service = serviceClass;
+        }
+
+        this.services[name] = service;
+
+        return service;
+    }
+
+    /**
+     * Construct the arguments as either services or parameters
      *
-     * @param {string} argumentId
-     * @returns {String}
+     * @param {Array} argumentReferences
+     * @param {Object} serviceTree A list of previously seen services while building the current service
+     * @returns {Array} An array of constructed arguments and parameters
      */    
-    getServiceIdFromArgumentReference(argumentId) {
-        var stripped;
-        stripped = argumentId.replace(/^@/, '');
-        stripped = stripped.replace(/^\?/, '');
-        return stripped;
+    constructArguments (argumentReferences) {
+        let _arguments = [];
+        for (let i = 0; i < argumentReferences.length; i++) {
+            _arguments.push(this.constructArgument(argumentReferences[i]));
+        }
+
+        return _arguments;
     }
 
     /**
@@ -228,6 +200,18 @@ module.exports = class Container {
         }
 
         return argument;
+    }
+
+    /**
+     *
+     * @param {string} argumentId
+     * @returns {String}
+     */    
+    getServiceIdFromArgumentReference(argumentId) {
+        var stripped;
+        stripped = argumentId.replace(/^@/, '');
+        stripped = stripped.replace(/^\?/, '');
+        return stripped;
     }
     
     /**

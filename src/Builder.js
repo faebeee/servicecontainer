@@ -11,6 +11,10 @@ module.exports = class Builder{
         this.servicesJson = servicesJson;
     }
 
+    /**
+     * 
+     * @returns {Container}
+     */
     build(  ) {
         let container = new Container();
 

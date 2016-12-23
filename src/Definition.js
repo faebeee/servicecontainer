@@ -5,9 +5,8 @@ module.exports = class Definition{
         this.file = null;
         this.arguments = null;
         this.rootDirectory = null;
-        this.isClass = null;
+        this.isObject = null;
         this.class = null;
-        this.properties = null;
-        this.calls = [];
+        this.className = null;
     }
 }

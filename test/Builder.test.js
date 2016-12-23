@@ -16,7 +16,9 @@ describe('Builder', function () {
                         "file" : "./Mock/Mock.service.js" 
                     }
                 }
-            }
+            },
+            __dirname
+            
         );
 
         let container = builder.build();  
@@ -33,11 +35,35 @@ describe('Builder', function () {
                         "arguments" : []
                     }
                 }
-            }
+            },
+            __dirname
         );
 
         let container = builder.build();
         unit.object(container.definitions.testService).isNot(null);
+    });
+
+
+    it ('service can be an object', function () {
+        let builder = new Builder(
+            {
+                parameters: {
+                    "testServiceFile" : "./Mock/Mock.object.js"
+                },
+                services: {
+                    "testService": {
+                        "file": "%testServiceFile%",
+                        "isObject" : true,
+                        "arguments" : []
+                    }
+                }
+            },
+            __dirname
+        );
+
+        let container = builder.build();
+        unit.object(container.get('testService'));
+        unit.string(container.get('testService').foo).is('bar');
     });
 
     it ('container should have parameters', function () {
@@ -52,7 +78,8 @@ describe('Builder', function () {
                         "arguments" : []
                     }
                 }
-            }
+            },
+            __dirname
         );
 
         let container = builder.build();
@@ -64,8 +91,8 @@ describe('Builder', function () {
         let builder = new Builder(
             {
                 parameters: {
-                    "testServiceFile" : "Mock/Mock.service.js",
-                    "otherFile" : "Mock/Other.service.js"
+                    "testServiceFile" : "./Mock/Mock.service.js",
+                    "otherFile" : "./Mock/Other.service.js"
                 },
                 services: {
                     "testService": {
@@ -79,7 +106,7 @@ describe('Builder', function () {
                     }
                 }
             },
-            __dirname+'/./'
+            __dirname
         );
 
         let container = builder.build();
@@ -98,8 +125,8 @@ describe('Builder', function () {
         let builder = new Builder(
             {
                 parameters: {
-                    "testServiceFile" : "Mock/Mock.service.js",
-                    "otherFile" : "Mock/Other.service.js"
+                    "testServiceFile" : "./Mock/Mock.service.js",
+                    "otherFile" : "./Mock/Other.service.js"
                 },
                 services: {
                     "testService": {
@@ -113,7 +140,7 @@ describe('Builder', function () {
                     }
                 }
             },
-            __dirname+'/./'
+            __dirname
         );
 
         let container = builder.build();
@@ -133,8 +160,8 @@ describe('Builder', function () {
         let builder = new Builder(
             {
                 parameters: {
-                    "testServiceFile" : "Mock/Mock.service.js",
-                    "otherFile" : "Mock/Other.service.js"
+                    "testServiceFile" : "./Mock/Mock.service.js",
+                    "otherFile" : "./Mock/Other.service.js"
                 },
                 services: {
                     "testService": {
@@ -146,12 +173,13 @@ describe('Builder', function () {
                     }
                 }
             },
-            __dirname+'/./'
+            __dirname
         );
 
-        let container = builder.build();
 
         function trigger(){
+            let container = builder.build();
+        
             unit.object(container.get('testService')).isNot(null);
         }
         unit.exception(trigger);
@@ -163,8 +191,8 @@ describe('Builder', function () {
         let builder = new Builder(
             {
                 parameters: {
-                    "testServiceFile" : "Mock/Mock.service.js",
-                    "otherFile" : "Mock/Other.service.js"
+                    "testServiceFile" : "./Mock/Mock.service.js",
+                    "otherFile" : "./Mock/Other.service.js"
                 },
                 services: {
                     "otherService": {
@@ -178,7 +206,7 @@ describe('Builder', function () {
                     
                 }
             },
-            __dirname+'/./'
+            __dirname
         );
 
         let container = builder.build();
@@ -194,8 +222,8 @@ describe('Builder', function () {
         let builder = new Builder(
             {
                 parameters: {
-                    "testServiceFile" : "Mock/Mock.service.js",
-                    "otherFile" : "Mock/Other.service.js"
+                    "testServiceFile" : "./Mock/Mock.service.js",
+                    "otherFile" : "./Mock/Other.service.js"
                 },
                 services: {
                     "otherService": {
@@ -209,13 +237,13 @@ describe('Builder', function () {
                     
                 }
             },
-            __dirname+'/./'
+            __dirname
         );
 
         let container = builder.build();
 
-        unit.string(container.getParameter('testServiceFile')).is('Mock/Mock.service.js');
-        unit.string(container.getParameter('otherFile')).is('Mock/Other.service.js');
+        unit.string(container.getParameter('testServiceFile')).is('./Mock/Mock.service.js');
+        unit.string(container.getParameter('otherFile')).is('./Mock/Other.service.js');
     });
 
 
@@ -223,8 +251,8 @@ describe('Builder', function () {
         let builder = new Builder(
             {
                 parameters: {
-                    "testServiceFile" : "Mock/Mock.service.js",
-                    "otherFile" : "Mock/Other.service.js"
+                    "testServiceFile" : "./Mock/Mock.service.js",
+                    "otherFile" : "./Mock/Other.service.js"
                 },
                 services: {
                     "otherService": {
@@ -238,17 +266,17 @@ describe('Builder', function () {
                     
                 }
             },
-            __dirname+'/./'
+            __dirname
         );
 
         let container = builder.build();
 
         function trigger(){
-            unit.string(container.getParameter('testServiceFile2')).is('Mock/Mock.service.js');
+            unit.string(container.getParameter('testServiceFile2')).is('./Mock/Mock.service.js');
         }
 
         unit.exception(trigger);
-        unit.string(container.getParameter('otherFile')).is('Mock/Other.service.js');
+        unit.string(container.getParameter('otherFile')).is('./Mock/Other.service.js');
     });
 
 });

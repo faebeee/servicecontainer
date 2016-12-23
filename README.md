@@ -2,13 +2,13 @@
 
 A servicecontainer build on javascript. It works with browserify, ES6, babel and so on
 
-# How To
+# How To 
 ## Install 
   Install the module using `npm`
 
   npm i @faebeee/service-container --save
 
-## Create services
+## Create services (NodeJs)
 Create some services and fill them with your business logic. 
 You don't have to follow any coding guideline (but use es6 classes because they're fancy ;) )
 
@@ -19,7 +19,6 @@ File: Mock.service.js
         constructor() {
             
         }
-
     }
 
 File: Other.service.js
@@ -31,6 +30,12 @@ File: Other.service.js
         }
     }
 
+
+## Create Services (Web)
+Since we can't require files dynamically in the browser using `require` (even with browserify)
+we have to create classes/functions globally. The best case here woul be to work with gulp and concat all services
+into one file and load it in your browser.
+
 ## Create Config
 First of all you have to create a config file.
 This is where all your services are configured.
@@ -39,20 +44,22 @@ when calling the `Builder`.
 
     {
         parameters: {
-        "testServiceFile" : "Mock/Mock.service.js",
-        "otherFile" : "Mock/Other.service.js"
+            "testServiceFile" : "./Mock/Mock.service.js",
+            "otherFile" : "./Mock/Other.service.js"
         },
         services: {
-        "testService": {
-            "file": "%testServiceFile%",
-            "arguments": [],
-        },
-        "otherService": {
-            "file": "%otherFile%",
-            "arguments": ['@testService'],
-        }
+            "testService": {
+                "file": "%testServiceFile%",
+                "arguments": [],
+            },
+            "otherService": {
+                "file": "%otherFile%",
+                "arguments": ['@testService'],
+            }
         }
     }
+
+Note that your relative path has to start with `./` or `../`
 
 The config file is very similar to the symfony 2 service definitions.
 When you define the classpath/filepath be carefull to provide the path relative 
@@ -61,6 +68,26 @@ to the location of the current config file/object.
 In this example we have two services. The `testService` is just a service that doesn't need
 any arguments passed in the constructor.
 The other service `otherService` takes the first service as argument.
+
+### Config Service options
+A service can have a couple of different config options
+
+`file` : String
+the path to the service class
+
+`arguments` : Array
+Arguments that are passed to the service constructor. If you want to pass a service reference
+prepent a `@` followed by the service name. For a parameter surround the parametername with `%`
+
+
+`isObject` : Boolean
+define if the service is a class or a simple objects that doesn't require any instanciation
+
+`className` : String
+this is used when you want to use this module in your browser. The problem there is that we can't
+require files in the browser. This property can be a function/class name that is available globally. 
+(Add your services globally and set their classname here )   
+
 
 ## Build the container
 Now that we create all the services we need to create the container.

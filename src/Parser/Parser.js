@@ -23,7 +23,9 @@ module.exports = class Parser{
         this.loadServices(data, container, rootDir);
     }
 
-
+    /**
+     * 
+     */
     loadServices(data, container, rootDir) {
         if (data.services === undefined || data.services === null) {
             return;
@@ -42,17 +44,24 @@ module.exports = class Parser{
 
     }
 
+    /**
+     * 
+     * 
+     * @param {object} serviceConf
+     * @param {string} rootDir
+     * @returns
+     */
     createServiceDefinition( serviceConf, rootDir ) {
         let def = new Definition();
         
-        def.file = serviceConf.file;
-        def.arguments = serviceConf.arguments;
+        def.file = serviceConf.file || null;
+        def.className = serviceConf.className || null;
+        def.arguments = serviceConf.arguments || [];
         def.rootDir = rootDir;
-        def.isClass = serviceConf.isClass;
-        def.isObject = serviceConf.isObject;
-        def.calls = serviceConf.calls;
-        def.properties = serviceConf.properties;
-        def.constructorMethod = serviceConf.constructorMethod;
+        def.isClass = serviceConf.isClass || false;
+        def.isObject = serviceConf.isObject || false;
+        def.calls = serviceConf.calls || [];
+        def.properties = serviceConf.properties || [];
 
         return def;
     }
