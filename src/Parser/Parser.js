@@ -14,10 +14,6 @@ module.exports = class Parser{
      * @param {any} container
      */
     parse(data, container, rootDir) {
-        if (data.services === undefined) {
-            throw 'No services configured';
-        }
-
         this.loadImport(data, container);
         this.loadParameters(data, container);
         this.loadServices(data, container, rootDir);

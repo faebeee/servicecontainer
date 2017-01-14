@@ -19,7 +19,12 @@ module.exports = class Container {
      */
     addParameter(name, value) {
         this.parameters[name] = value;
-    }    
+    }   
+    
+    prepareNamePath(name) {
+        let path = name.split('.');
+        return path;
+    }
 
     /**
      * Add definition to server
@@ -38,17 +43,27 @@ module.exports = class Container {
      * @param {String} name The name of the parameter
      * @returns {any} The value of the parameter
      */
-    getParameter (name) {
-        if(this.parameters[name] === null || this.parameters[name] === undefined){
-            throw new Error('No parameter with name '+name);
+    getParameter(name) {
+        name = this.prepareNamePath(name);
+       
+        let parameter = this.parameters;        
+        for (let i = 0; i < name.length; i++){
+            let key = name[i];
+
+            if(parameter[key] === null || parameter[key] === undefined){
+                throw new Error('No parameter with name '+key);
+            }
+
+            parameter = parameter[key];
         }
 
-        var parameter = this.parameters[name];
+        
+
 
         if ("string" == typeof parameter) {
             return this.fillParameter(parameter);
         } else {
-            return this.deepCopyObject(parameter);
+            return JSON.parse(JSON.stringify(parameter));;
         }
     }
 
