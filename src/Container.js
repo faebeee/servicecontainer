@@ -44,6 +44,11 @@ module.exports = class Container {
      * @returns {any} The value of the parameter
      */
     getParameter(name) {
+
+        if (this.parameters[name] !== null && this.parameters[name] !== undefined) {
+            return this.parameters[name];
+        }    
+
         name = this.prepareNamePath(name);
        
         let parameter = this.parameters;        
