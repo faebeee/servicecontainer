@@ -20,9 +20,8 @@ module.exports = class Parser{
         if (data === null || data === undefined) {
             return;
         }
-
-        this.loadImport(data, container);
         this.loadParameters(data, container);
+        this.loadImport(data, container);
         this.loadServices(data, container);
     }
 
@@ -102,13 +101,12 @@ module.exports = class Parser{
         if (data.imports === undefined || data.imports === null) {
             return;
         }    
+
         let imports = data.imports;
         let keys = Object.keys(imports);
         for (let i = 0; i < keys.length; i++){
             let key = keys[i];
             let value = imports[key];
-        
-            console.log(this.rootDir + value);
             
             this.parse(require(this.rootDir+value), container)
         }   

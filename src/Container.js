@@ -131,6 +131,7 @@ module.exports = class Container {
         }
 
         this.services[name] = service;
+        
 
         return service;
     }
@@ -175,7 +176,7 @@ module.exports = class Container {
 
         } else {
             argParamId = this._getParameterIdFromArgumentReference(reference);
-            argument = this.getParameter(argParamId, ns);
+            argument = this.getParameter(argParamId);
         }
 
         return argument;
@@ -206,14 +207,12 @@ module.exports = class Container {
         let services = [];
 
         for (let i = 0; i < len; i++){
-            
             let key = keys[i];
             let definition = this.definitions[key]; 
-            if (definition.tags.length > 0) {
-                let tags = definition.tags;
-                if (tags.indexOf(tagName) !== -1) {
-                    services.push(this.get(definition.name));
-                }
+            let tags = definition.tags;
+            
+            if (tags.length > 0 && tags.indexOf(tagName) !== -1) {
+                services.push(this.get(definition.name));
             }
         }
 
@@ -259,7 +258,7 @@ module.exports = class Container {
      * @returns {Object}
      */
     get(name) {
-        if (this.services[name] === undefined) {
+        if (this.services[name] === undefined || this.services[name] === null) {
             this._createService(name);
         }
 
