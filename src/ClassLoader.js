@@ -4,7 +4,8 @@ module.exports = class ClassLoader{
     
     /**
      * Preload class definition 
-     * 
+     *
+     * @param {Container} container
      * @param {Definition} def
      */
     loadClass(container, def){
@@ -21,8 +22,9 @@ module.exports = class ClassLoader{
     }
 
     /**
-     * Load classdefinition from module 
-     * 
+     * Load classdefinition from module
+     *
+     * @param {Container} container
      * @param {Definition} def
      * @returns {Class}
      */
@@ -34,13 +36,13 @@ module.exports = class ClassLoader{
 
         let classFile = null;
 
-        if (container.isArgumentALiteral(def.file)) {
+        if (container._isArgumentALiteral(def.file)) {
             classFile = def.file;
         } else {
             classFile = container.getParameter(
-                container.getParameterIdFromArgumentReference(def.file)
+                container._getParameterIdFromArgumentReference(def.file)
             );
-        }    
+        }
 
         if(!classFile){
             throw new Error('File is not defined in config');

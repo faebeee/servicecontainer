@@ -97,7 +97,6 @@ Therefore we need to create a new `Builder` instance like this
     let Builder = require('@faebeee/service-container').Builder;
 
     let builder = new Builder(
-      require('./Config/Services.json'),
       __dirname+"/Config/"
     );
 
@@ -106,23 +105,16 @@ The second one is the path pointing to the configuration folder. This is used to
 You can also pass a json object directly
 
     let builder = new Builder(
-        {
-            parameters: {
-                "testServiceFile" : "./Mock/Mock.service.js"
-            },
-            services: {
-                "testService": {
-                    "file": "%testServiceFile%",
-                    "arguments" : []
-                }
-            }
-        },
-      __dirname+"/services"        
+      __dirname+"/Config/"        
     );
 
 And then finally
 
-    let container = builder.build();
+    let container = builder.build(require('./path/to/services.json'));
+
+Or if you run in a node environment
+
+    let container = builder.buildFromFile('./path/to/services.json');
 
 This initializes the services (but doesn't create them. They will be created when they're requested to minimize load)
 
@@ -135,3 +127,15 @@ Or access the parameter
 
     container.getParameter('testServiceFile')
     
+
+
+# API
+
+## getParameter (name:String)
+Get parameter from your configfily 
+
+## get (name:String)
+Get a service by the given name
+
+## getServicesByTag(tag:String)
+get services with given tag

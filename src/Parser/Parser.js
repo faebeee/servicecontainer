@@ -3,26 +3,35 @@
 let Definition = require('../Definition');
 
 module.exports = class Parser{
-    constructor() {
-        
-    }
-
     /**
-     * 
-     * 
-     * @param {any} data
-     * @param {any} container
+     *
+     * @param {String} rootDir
      */
-    parse(data, container, rootDir) {
+    constructor(rootDir) {
+        this.rootDir = rootDir;
+    }
+    
+    /**
+     * Parse data
+     * @param {object} data
+     * @param {Container} container
+     */
+    parse(data, container) {
+        if (data === null || data === undefined) {
+            return;
+        }
+
         this.loadImport(data, container);
         this.loadParameters(data, container);
-        this.loadServices(data, container, rootDir);
+        this.loadServices(data, container);
     }
 
     /**
-     * 
+     *
+     * @param {Object} data
+     * @param {Container} container
      */
-    loadServices(data, container, rootDir) {
+    loadServices(data, container) {
         if (data.services === undefined || data.services === null) {
             return;
         }    
@@ -33,40 +42,40 @@ module.exports = class Parser{
             let key = keys[i];
             let value = services[key];
             
-            container.addDefinition(key,
-                this.createServiceDefinition(value, rootDir)
+            container._addDefinition(key,
+                this.createServiceDefinition(key, value)
             );
         }           
-
     }
 
     /**
+     * Create service definition
      * 
-     * 
-     * @param {object} serviceConf
-     * @param {string} rootDir
+     * @param {Object} serviceConf
      * @returns
      */
-    createServiceDefinition( serviceConf, rootDir ) {
+    createServiceDefinition(name, serviceConf ) {
         let def = new Definition();
         
+        def.name = name;
         def.file = serviceConf.file || null;
         def.className = serviceConf.className || null;
         def.arguments = serviceConf.arguments || [];
-        def.rootDir = rootDir;
+        def.rootDir = this.rootDir;
         def.isClass = serviceConf.isClass || false;
         def.isObject = serviceConf.isObject || false;
         def.calls = serviceConf.calls || [];
         def.properties = serviceConf.properties || [];
+        def.tags = serviceConf.tags || [];
 
         return def;
     }
 
     /**
+     * Load parameters from file
      * 
-     * 
-     * @param {any} data
-     * @param {any} container
+     * @param {Object} data
+     * @param {Container} container
      * @returns
      */
     loadParameters(data, container) {
@@ -79,28 +88,29 @@ module.exports = class Parser{
         for (let i = 0; i < keys.length; i++){
             let key = keys[i];
             let value = parameters[key];
-            container.addParameter(key, value);
+            container._addParameter(key, value);
         }   
     }
 
     /**
      * 
-     * @todo
-     * @param {any} data
-     * @param {any} container
+     * @param {Object} data
+     * @param {Container} container
      * @returns
      */
     loadImport(data, container) {
         if (data.imports === undefined || data.imports === null) {
             return;
         }    
-
         let imports = data.imports;
         let keys = Object.keys(imports);
         for (let i = 0; i < keys.length; i++){
             let key = keys[i];
             let value = imports[key];
-            this.parse(require(value), container)
+        
+            console.log(this.rootDir + value);
+            
+            this.parse(require(this.rootDir+value), container)
         }   
     }
-}
+};
