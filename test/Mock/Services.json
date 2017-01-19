@@ -5,11 +5,13 @@
   "services": {
     "mock": {
       "file": "./Mock.service.js",
-      "arguments" : ["%foo%"]
+      "arguments" : ["%foo%"],
+      "tags" : ["mock"]
     },
     "other": {
       "file": "./Other.service.js",
-      "arguments" : ["@mock"]
+      "arguments" : ["@mock"],
+      "tags" : ["mock"]
     },
     "object": {
       "file": "./Object.service.js",

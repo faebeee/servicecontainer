@@ -41,7 +41,7 @@ module.exports = class AbstractParser{
             let key = keys[i];
             let value = services[key];
             
-            container.addDefinition(key,
+            container._addDefinition(key,
                 this.createServiceDefinition(key, value)
             );
         }           
@@ -82,7 +82,7 @@ module.exports = class AbstractParser{
         for (let i = 0; i < keys.length; i++){
             let key = keys[i];
             let value = parameters[key];
-            container.addParameter(key, value);
+            container._addParameter(key, value);
         }   
     }
 

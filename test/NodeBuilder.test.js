@@ -95,4 +95,12 @@ describe('Node Builder', function () {
 
     });
 
+    it('get services by tag', function () {
+
+        let container = ServiceContainer.buildFromFile(__dirname+'/Mock/Services.json');
+
+        unit.array(container.getServicesByTag('mock')).hasLength(2);
+
+    });
+
 });

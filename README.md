@@ -128,3 +128,43 @@ Services.json
     console.log("Parameter : "+container.getParameter('name'));
     
     
+    
+# API
+
+
+## class ServiceContainer 
+
+### buildFromJson(json:Object, services:Object) : Container
+this is used to create the container for the web environment
+
+    let container = ServiceContainer.buildFromJson(
+            require(__dirname+'/Config/Services.json'),
+        
+            // Here we have to link the services configured in the json to a specific class.
+            // this has to be done because there is no chance to load them dynamically in the browser runtime
+            {
+                "../Services/Hello.service.js" : require("./Services/Hello.service.js")
+            }
+        );
+
+
+### buildFromFile(file:String) : Container
+Used to create the container for nodejs 
+    
+    
+    let container = ServiceContainer.buildFromFile(__dirname+'/Config/Services.json');
+    
+    
+## class Container
+
+### get(name:String) : Object
+This returns the service instance for the given name
+
+### getServicesByTag(tag:String) : Object[]
+Returns an array with services that have a specific tag
+
+### getParameter(name:String) : Object
+Returns a parameter configured under `parameters` in your configfile
+
+
+    

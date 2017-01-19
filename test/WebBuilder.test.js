@@ -188,4 +188,26 @@ describe('Web Builder', function () {
 
     });
 
+    it('get services by tag', function () {
+
+        let container = ServiceContainer.buildFromJson({
+            "services": {
+                "mock": {
+                    "file": "./Mock/Mock.service.js",
+                    "tags" : ["mock"]
+                },
+                "other": {
+                    "file": "./Mock/Other.service.js",
+                    "tags" : ["mock"]
+                }
+            }
+        }, {
+            "./Mock/Mock.service.js" : require('./Mock/Mock.service'),
+            "./Mock/Other.service.js" : require('./Mock/Other.service')
+        });
+
+        unit.array(container.getServicesByTag('mock')).hasLength(2);
+
+    });
+
 });
