@@ -1,28 +1,25 @@
 'use strict';
 
-let Parser = require('./Parser/Parser');
+let path = require('path');
+
+let NodeParser = require('./Parser/NodeParser');
+let WebParser = require('./Parser/WebParser');
+
+let NodeClassLoader = require('./Loader/NodeClassLoader');
+let WebClassLoader = require('./Loader/WebClassLoader');
+
 let Container = require('./Container');
 
 module.exports = class Builder{
 
     /**
-     *
-     * @param {string} rootDir
-     */
-    constructor(rootDir) {
-        this.rootDir = rootDir;
-        this.parser = new Parser(rootDir);
-        
-    }
-
-    /**
-     * Build services by given json
+     * Build services from json data
      * @returns {Container}
      */
-    build( json ) {
-        this.servicesJson = json;
-        let container = new Container();
-        this.parser.parse(this.servicesJson, container);
+    buildFromJson( json, services ) {
+        let container = new Container(new WebClassLoader(services));
+        let parser = new WebParser();
+        parser.parse(json, container);
         return container;
     }
 
@@ -30,10 +27,11 @@ module.exports = class Builder{
      * Build Json from file
      * @returns {Container}
      */
-    buildFromFile( file ) {
-        let container = new Container();
-        this.parser.parse(require(this.rootDir+file), container);
+    buildFromFile( file) {
+        let configFolder = path.dirname( file );
+        let container = new Container( new NodeClassLoader( configFolder ) );
+        let parser = new NodeParser( configFolder );
+        parser.parse(require( file ), container);
         return container;
     }
-
 };

@@ -1,0 +1,19 @@
+{
+  "parameters" : {
+    "foo" : "bar"
+  },
+  "services": {
+    "mock": {
+      "file": "./Mock.service.js",
+      "arguments" : ["%foo%"]
+    },
+    "other": {
+      "file": "./Other.service.js",
+      "arguments" : ["@mock"]
+    },
+    "object": {
+      "file": "./Object.service.js",
+      "isObject" : true
+    }
+  }
+}

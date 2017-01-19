@@ -2,7 +2,7 @@
 
 let Definition = require('../Definition');
 
-module.exports = class Parser{
+module.exports = class AbstractParser{
     /**
      *
      * @param {String} rootDir
@@ -41,7 +41,7 @@ module.exports = class Parser{
             let key = keys[i];
             let value = services[key];
             
-            container._addDefinition(key,
+            container.addDefinition(key,
                 this.createServiceDefinition(key, value)
             );
         }           
@@ -58,13 +58,8 @@ module.exports = class Parser{
         
         def.name = name;
         def.file = serviceConf.file || null;
-        def.className = serviceConf.className || null;
         def.arguments = serviceConf.arguments || [];
-        def.rootDir = this.rootDir;
-        def.isClass = serviceConf.isClass || false;
         def.isObject = serviceConf.isObject || false;
-        def.calls = serviceConf.calls || [];
-        def.properties = serviceConf.properties || [];
         def.tags = serviceConf.tags || [];
 
         return def;
@@ -87,7 +82,7 @@ module.exports = class Parser{
         for (let i = 0; i < keys.length; i++){
             let key = keys[i];
             let value = parameters[key];
-            container._addParameter(key, value);
+            container.addParameter(key, value);
         }   
     }
 
@@ -98,17 +93,6 @@ module.exports = class Parser{
      * @returns
      */
     loadImport(data, container) {
-        if (data.imports === undefined || data.imports === null) {
-            return;
-        }    
-
-        let imports = data.imports;
-        let keys = Object.keys(imports);
-        for (let i = 0; i < keys.length; i++){
-            let key = keys[i];
-            let value = imports[key];
-            
-            this.parse(require(this.rootDir+value), container)
-        }   
+        throw new Error('Method not implemented');
     }
 };
