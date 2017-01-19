@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = class MockService{
-    constructor() {
-        
+    constructor( data ) {
+        this.data = data || null;
     }
 
-}
+};

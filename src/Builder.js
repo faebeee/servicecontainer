@@ -1,5 +1,7 @@
 'use strict';
 
+let path = require('path');
+
 let NodeParser = require('./Parser/NodeParser');
 let WebParser = require('./Parser/WebParser');
 
@@ -9,17 +11,6 @@ let WebClassLoader = require('./Loader/WebClassLoader');
 let Container = require('./Container');
 
 module.exports = class Builder{
-
-    constructor() {
-    }
-
-    /**
-     * Build services by given json
-     * @returns {Container}
-     */
-    build( json ) {
-
-    }
 
     /**
      * Build services from json data
@@ -36,11 +27,11 @@ module.exports = class Builder{
      * Build Json from file
      * @returns {Container}
      */
-    buildFromFile( file ) {
-        let container = new Container( new NodeClassLoader() );
-        let parser = new WebParser();
-        parser.parse(require(file), container);
+    buildFromFile( file) {
+        let configFolder = path.dirname( file );
+        let container = new Container( new NodeClassLoader( configFolder ) );
+        let parser = new NodeParser( configFolder );
+        parser.parse(require( file ), container);
         return container;
     }
-
-}
+};

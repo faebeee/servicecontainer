@@ -28,22 +28,8 @@ module.exports = class Container {
      * @param {Definition} definition
      */
     addDefinition(name, definition) {
+        this.classLoader.loadClass(this, definition);
         this.definitions[name] = definition;
-
-        if (definition.isClass === true) {
-            this.instanciate.push(name);
-        }
-    }
-
-    /**
-     * Instanciate all classes with property isClass
-     */
-    instanciateClasses() {
-        let list = this.instanciate;
-        for (let i = 0; i < list.length; i++){
-            let name = list[i];
-            this.createService(name);
-        }
     }
 
     /**
@@ -62,67 +48,27 @@ module.exports = class Container {
         }
 
         let def = this.definitions[name];
-        let classFile = null;
-
-        if (this.isArgumentALiteral(def.file)) {
-            classFile = def.file;
-        } else {
-            classFile = this.getParameter(
-                this.getParameterIdFromArgumentReference(def.file)
-            );
-        }
-
-        if(!classFile){
-            throw new Error('File is not defined in config');
-        }
-
-        // Check if the class file path is relative or absolute
-
-        classFile = classFile.replace(/^\.\.\//, './../');
-        if (/^\.\//.test(classFile)) {
-            // Remove references to the root dir
-            classFile = def.rootDir + classFile.replace('./', '/');
-        }
-
-
-        def.class = require(classFile);
-
         let _arguments = this.constructArguments(def.arguments);
 
         let serviceClass = def.class;
-        //let service = new (Function.prototype.bind.apply(serviceClass, [null].concat(_arguments)));
+        let service  = null;
 
-        //let service = new (Function.prototype.bind.apply(Service, [null].concat(_arguments)));
-        let service = null;
-
-        if (!def.isObject) {
-            service = this.create(serviceClass, _arguments);
-        } else {
+        if(def.isObject === true){
             service = serviceClass;
+        }else{
+            service = new (Function.prototype.bind.apply(serviceClass, [null].concat(_arguments)));
         }
 
         this.services[name] = service;
 
-        return service;
-    }
 
-    /**
-     * Create the service instance
-     *
-     * @param {Class} obj the service that should be instanciated
-     * @param {String[]} _arguments array of arguments
-     * @returns {Object}
-     */
-    create(obj, _arguments) {
-        var a = new (obj.bind.apply(obj, [null].concat(_arguments)))();
-        return  a;
+        return service;
     }
 
      /**
      * Construct the arguments as either services or parameters
      *
      * @param {Array} argumentReferences
-     * @param {Object} serviceTree A list of previously seen services while building the current service
      * @returns {Array} An array of constructed arguments and parameters
      */
     constructArguments (argumentReferences) {
@@ -145,7 +91,7 @@ module.exports = class Container {
             throw new Error('No parameter with name '+name);
         }
 
-        var parameter = this.parameters[name];
+        let parameter = this.parameters[name];
 
         if ("string" == typeof parameter) {
             return this.fillParameter(parameter);
@@ -155,19 +101,19 @@ module.exports = class Container {
     }
 
      /**
-     * Fills a parameter by replacing its variable palceholders
+     * Fills a parameter by replacing its letiable palceholders
      *
-     * @param {String} name The name of the parameter
+     * @param {String} parameter The name of the parameter
      * @returns {String} The filled parameter
      */
     fillParameter (parameter) {
-        var vars = parameter.match(/(%[a-zA-Z-_\.]*%)/g);
-        if (null == vars) return parameter;
+        let lets = parameter.match(/(%[a-zA-Z-_\.]*%)/g);
+        if (null == lets) return parameter;
 
-        vars.forEach(function (current_var) {
-            var var_name = current_var.replace(/%/g, "");
-            var value = this.getParameter(var_name);
-            parameter = parameter.replace(current_var, value);
+        lets.forEach(function (current_let) {
+            let let_name = current_let.replace(/%/g, "");
+            let value = this.getParameter(let_name);
+            parameter = parameter.replace(current_let, value);
         }.bind(this));
 
         return parameter;
@@ -185,7 +131,7 @@ module.exports = class Container {
 
     /**
      * Checks if a given argument is a service or a parameter
-     * @param {String} argumentId
+     * @param {String} arg
      * @return {Boolean}
      */    
     isArgumentALiteral (arg) {
@@ -215,45 +161,12 @@ module.exports = class Container {
     }
 
     /**
-     * Create a new service instance
-     * 
-     * @param {String} name
-     * @returns {Object}
-     */
-    _createService( name ) {
-        if (this.definitions[name] === undefined || this.definitions[name] === null) {
-            throw new Error('No definition for name ' + name);
-        }
-
-        if(this.services[name] !== null && this.services[name] !== undefined){
-            return this.services[name];
-        }
-
-        let def = this.definitions[name];
-        let _arguments = this._constructArguments(def.arguments);
-    
-        let serviceClass = def.class;
-        let service  = null;
-        
-        if(def.isObject === false){
-            service = new (Function.prototype.bind.apply(serviceClass, [null].concat(_arguments)));
-        }else{
-            service = serviceClass;
-        }
-
-        this.services[name] = service;
-        
-
-        return service;
-    }
-
-    /**
      *
      * @param {string} argumentId
      * @returns {String}
      */    
     getServiceIdFromArgumentReference(argumentId) {
-        var stripped;
+        let stripped;
         stripped = argumentId.replace(/^@/, '');
         stripped = stripped.replace(/^\?/, '');
         return stripped;
@@ -262,13 +175,11 @@ module.exports = class Container {
     /**
      * Construct a single argument
      *
-     * @param {string} reference
-     * @param {type} serviceTree
-     * @param ns The service namespace
-     * @returns {undefined}
+     * @param {String} reference
+     * @returns {any}
      */
-    constructArgument (reference, serviceTree, ns) {
-        var id, argSvcTree, argIsOptional, argParamId, argument;
+    constructArgument (reference) {
+        let id, argParamId, argument;
 
         if (this.isArgumentALiteral(reference)) {
             argument = reference;
@@ -285,7 +196,7 @@ module.exports = class Container {
 
         } else {
             argParamId = this.getParameterIdFromArgumentReference(reference);
-            argument = this.getParameter(argParamId, ns);
+            argument = this.getParameter(argParamId);
         }
 
         return argument;
@@ -304,4 +215,4 @@ module.exports = class Container {
 
         return this.services[name];
     }
-}
+};
