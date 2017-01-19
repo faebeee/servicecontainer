@@ -4,7 +4,16 @@ let Definition = require('../Definition');
 let AbstractParser = require('./AbstractParser');
 
 module.exports = class WebParser extends AbstractParser{
-    
+
+    /**
+     *
+     * @param services
+     */
+    constructor( services ){
+        super();
+        this.servicesClasses = services;
+    }
+
     /**
      * 
      * @param {Object} data
@@ -22,7 +31,7 @@ module.exports = class WebParser extends AbstractParser{
             let key = keys[i];
             let value = imports[key];
             
-            this.parse(require(this.rootDir+value), container)
+            this.parse(this.servicesClasses[value], container)
         }   
     }
 };

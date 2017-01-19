@@ -18,7 +18,7 @@ module.exports = class Builder{
      */
     buildFromJson( json, services ) {
         let container = new Container(new WebClassLoader(services));
-        let parser = new WebParser();
+        let parser = new WebParser( services );
         parser.parse(json, container);
         return container;
     }
@@ -29,6 +29,7 @@ module.exports = class Builder{
      */
     buildFromFile( file) {
         let configFolder = path.dirname( file );
+
         let container = new Container( new NodeClassLoader( configFolder ) );
         let parser = new NodeParser( configFolder );
         parser.parse(require( file ), container);

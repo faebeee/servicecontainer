@@ -2,6 +2,7 @@
 
 let Definition = require('../Definition');
 let AbstractParser = require('./AbstractParser');
+let path = require('path');
 
 module.exports = class NodeParser extends AbstractParser{
     /**
@@ -29,8 +30,9 @@ module.exports = class NodeParser extends AbstractParser{
         for (let i = 0; i < keys.length; i++){
             let key = keys[i];
             let value = imports[key];
+            let importFile = path.resolve(this.rootDir, value);
 
-            let importFile = this.rootDir + value.replace('./', '/');
+            //let importFile = this.rootDir + value.replace('./', '/');
             this.parse(require( importFile ), container)
         }   
     }

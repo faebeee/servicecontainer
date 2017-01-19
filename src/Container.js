@@ -185,6 +185,16 @@ module.exports = class Container {
     }
 
     /**
+     * Create deep copy
+     * @param {Object} object
+     * @private
+     * @returns {Object}
+     */
+    _deepCopyObject( object ){
+        return JSON.parse(JSON.stringify(object));
+    }
+
+    /**
      * Get a parameter
      *
      * @param {String} name The name of the parameter
@@ -200,7 +210,7 @@ module.exports = class Container {
         if ("string" == typeof parameter) {
             return this._fillParameter(parameter);
         } else {
-            return this.deepCopyObject(parameter);
+            return this._deepCopyObject(parameter);
         }
     }
 
