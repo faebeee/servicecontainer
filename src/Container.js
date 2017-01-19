@@ -1,13 +1,15 @@
 'use strict';
 
+
 module.exports = class Container {
 
-    constructor() {
+    constructor( classLoader ) {
         this.services = {};
         this.definitions = {};
         this.parameters = {};
+        this.classLoader = classLoader;
         this.instanciate = [];
-    }    
+    }
 
     /**
      * Add parameter to container
@@ -17,7 +19,7 @@ module.exports = class Container {
      */
     addParameter(name, value) {
         this.parameters[name] = value;
-    }    
+    }
 
     /**
      * Add definition to server
@@ -46,7 +48,7 @@ module.exports = class Container {
 
     /**
      * Create a new service instance
-     * 
+     *
      * @param {String} name
      * @returns {Object}
      */
@@ -68,25 +70,25 @@ module.exports = class Container {
             classFile = this.getParameter(
                 this.getParameterIdFromArgumentReference(def.file)
             );
-        }    
+        }
 
         if(!classFile){
             throw new Error('File is not defined in config');
         }
 
         // Check if the class file path is relative or absolute
-        
+
         classFile = classFile.replace(/^\.\.\//, './../');
         if (/^\.\//.test(classFile)) {
             // Remove references to the root dir
             classFile = def.rootDir + classFile.replace('./', '/');
         }
-        
+
 
         def.class = require(classFile);
-        
+
         let _arguments = this.constructArguments(def.arguments);
-    
+
         let serviceClass = def.class;
         //let service = new (Function.prototype.bind.apply(serviceClass, [null].concat(_arguments)));
 
@@ -97,16 +99,16 @@ module.exports = class Container {
             service = this.create(serviceClass, _arguments);
         } else {
             service = serviceClass;
-        }    
-        
+        }
+
         this.services[name] = service;
 
         return service;
     }
-    
+
     /**
      * Create the service instance
-     * 
+     *
      * @param {Class} obj the service that should be instanciated
      * @param {String[]} _arguments array of arguments
      * @returns {Object}
@@ -122,7 +124,7 @@ module.exports = class Container {
      * @param {Array} argumentReferences
      * @param {Object} serviceTree A list of previously seen services while building the current service
      * @returns {Array} An array of constructed arguments and parameters
-     */    
+     */
     constructArguments (argumentReferences) {
         let _arguments = [];
         for (let i = 0; i < argumentReferences.length; i++) {
@@ -213,12 +215,36 @@ module.exports = class Container {
     }
 
     /**
-     * Checks if a given argument is an optional service
-     * @param {string} argumentId
-     * @returns {Boolean} Whether or not it is optional
-     */    
-    isArgumentOptional(argumentId) {
-        return (argumentId.indexOf('@?') !== -1);
+     * Create a new service instance
+     * 
+     * @param {String} name
+     * @returns {Object}
+     */
+    _createService( name ) {
+        if (this.definitions[name] === undefined || this.definitions[name] === null) {
+            throw new Error('No definition for name ' + name);
+        }
+
+        if(this.services[name] !== null && this.services[name] !== undefined){
+            return this.services[name];
+        }
+
+        let def = this.definitions[name];
+        let _arguments = this._constructArguments(def.arguments);
+    
+        let serviceClass = def.class;
+        let service  = null;
+        
+        if(def.isObject === false){
+            service = new (Function.prototype.bind.apply(serviceClass, [null].concat(_arguments)));
+        }else{
+            service = serviceClass;
+        }
+
+        this.services[name] = service;
+        
+
+        return service;
     }
 
     /**
@@ -264,7 +290,7 @@ module.exports = class Container {
 
         return argument;
     }
-    
+
     /**
      * get a service
      * 

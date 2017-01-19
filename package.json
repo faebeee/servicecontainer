@@ -1,12 +1,9 @@
 {
   "name": "servicecontainer",
   "description": "A Symfony2 inspired depdendency injection container for node",
-  "version": "0.4.2",
+  "version": "2.2.0",
   "author": {
     "name": "Fabio Gianini"
-  },
-  "scripts" : {
-    "test" : "node_modules/.bin/mocha test/Builder.test.js"
   },
   "contributors": [],
   "repository": {
@@ -15,8 +12,6 @@
   },
   "main": "ServiceContainer.js",
   "directories": {
-    "lib": "./lib",
-    "example": "./example"
   },
   "licenses": [
     {
@@ -27,7 +22,11 @@
   "engines": {
     "node": ">=0.8.17"
   },
-  "dependencies": {
+  "scripts": {
+    "test": "./node_modules/.bin/mocha test/*.test.js"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0",
     "unit.js": "^2.0.0"
   }
 }
