@@ -166,7 +166,6 @@ describe('Web Builder', function () {
 
     });
 
-
     it('throw error when parameter does not exist', function () {
         function loadServiceWithoutClassDef() {
             let container = ServiceContainer.buildFromJson({
@@ -180,8 +179,7 @@ describe('Web Builder', function () {
                 "./Mock/Object.service.js" : require("./Mock/Object.service.js"),
             });
 
-
-            container.getParameter('mock2');
+            console.log(container.getParameter('mock2'));
         }
 
         unit.exception(loadServiceWithoutClassDef);

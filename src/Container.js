@@ -1,5 +1,6 @@
 'use strict';
 
+const merge = require('deepmerge');
 
 module.exports = class Container {
 
@@ -19,18 +20,21 @@ module.exports = class Container {
      */
     _loadDefaultParameters(){
         if(process !== undefined && process !== null) {
-            this._addParameter('app.root', process.cwd());
+            this._addParameters({
+                'app' : {
+                    'root' : process.cwd()
+                }
+            });
         }
     }
 
     /**
      * Add parameter to container
      * 
-     * @param {String} name
-     * @param {any} value
+     * @param {Object} parameters
      */
-    _addParameter(name, value) {
-        this.parameters[name] = value;
+    _addParameters( parameters ) {
+        this.parameters = merge.all([this.parameters, parameters]);
     }
 
     /**
@@ -216,7 +220,15 @@ module.exports = class Container {
         let path = name.split('.');
         let params = this.parameters;
         for(let i = 0; i < path.length; i++){
-            params = params[ path[i] ];
+            if(params === null){
+                continue;
+            }
+
+            if(params[ path[i] ] !== null && params[ path[i] ] != undefined){
+                params = params[ path[i] ];
+            }else{
+                params = null;
+            }
         }
         return params;
     }
@@ -264,7 +276,6 @@ module.exports = class Container {
         }
 
         return services;
-
     }
 
     /**

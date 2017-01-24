@@ -45,5 +45,4 @@ module.exports = class ClassLoader extends AbstractClassLoader{
         return require(classFile);
     }
 
-
-}
+};

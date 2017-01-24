@@ -21,7 +21,6 @@ module.exports = class AbstractParser{
             return;
         }
 
-
         this.loadImport(data, container);
         this.loadParameters(data, container);
         this.loadServices(data, container);
@@ -81,12 +80,7 @@ module.exports = class AbstractParser{
         }
 
         let parameters = data.parameters;
-        let keys = Object.keys(parameters);
-        for (let i = 0; i < keys.length; i++){
-            let key = keys[i];
-            let value = parameters[key];
-            container._addParameter(key, value);
-        }   
+        container._addParameters(parameters);
     }
 
     /**
