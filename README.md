@@ -107,7 +107,7 @@ Services.json
         }
     };
     
- ## Applicaition
+ ## Application
  
  App.js
  
@@ -167,4 +167,16 @@ Returns an array with services that have a specific tag
 Returns a parameter configured under `parameters` in your configfile
 
 
+# Container
+The container has some default parameters that can be very useful.
+
+## app.root : String
+returns the value of `process.cwd()`. This can be usefull if you define some references to other config files or sqlite databases:
+
     
+    "parameters": {
+        ...
+        "sqlite.file" : "%app.root%/resources/data/db.sqlite",
+        "packagejson.file" : "%app.root%/package.json"
+        ...
+    }

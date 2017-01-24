@@ -9,6 +9,16 @@ module.exports = class Container {
         this.parameters = {};
         this.classLoader = classLoader;
         this.instanciate = [];
+
+        this._loadDefaultParameters()
+    }
+
+    /**
+     *
+     * @private
+     */
+    _loadDefaultParameters(){
+        this._addParameter('app.root', process.cwd());
     }
 
     /**
@@ -195,17 +205,35 @@ module.exports = class Container {
     }
 
     /**
+     *
+     * @param name
+     * @return {Array|*}
+     * @private
+     */
+    _getRecursiveParameterByName( name ){
+        let path = name.split('.');
+        let params = this.parameters;
+        for(let i = 0; i < path.length; i++){
+            params = params[ path[i] ];
+        }
+        return params;
+    }
+
+    /**
      * Get a parameter
      *
      * @param {String} name The name of the parameter
      * @returns {any} The value of the parameter
      */
     getParameter (name) {
-        if(this.parameters[name] === null || this.parameters[name] === undefined){
-            throw new Error('No parameter with name '+name);
-        }
 
-        let parameter = this.parameters[name];
+        let parameter = null;
+        if((parameter = this._getRecursiveParameterByName(name)) === null){
+            if(this.parameters[name] === null || this.parameters[name] === undefined){
+                throw new Error('No parameter with name '+name);
+            }
+            parameter = this.parameters[name];
+        }
 
         if ("string" == typeof parameter) {
             return this._fillParameter(parameter);

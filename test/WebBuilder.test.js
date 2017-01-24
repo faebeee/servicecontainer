@@ -210,4 +210,34 @@ describe('Web Builder', function () {
 
     });
 
+
+    it('get scaffolded parameter', () => {
+
+        let container = ServiceContainer.buildFromJson({
+            "parameters" : {
+                "foo" : "bar",
+                "test" : {
+                    "name" : "world"
+                },
+                "ref" : "%foo% bar"
+            }
+        });
+
+        unit.string(container.getParameter('test.name')).is('world');
+    });
+
+
+    it('get parameter with reference', () => {
+        let container = ServiceContainer.buildFromJson({
+            "parameters" : {
+                "foo" : "bar",
+                "test" : {
+                    "name" : "world"
+                },
+                "ref" : "%foo% bar"
+            }
+        });
+        unit.string(container.getParameter('ref')).is('bar bar');
+    });
+
 });
