@@ -170,7 +170,7 @@ Returns a parameter configured under `parameters` in your configfile
 # Container
 The container has some default parameters that can be very useful.
 
-## app.root : String
+## app.root : String (nodejs)
 returns the value of `process.cwd()`. This can be usefull if you define some references to other config files or sqlite databases:
 
     

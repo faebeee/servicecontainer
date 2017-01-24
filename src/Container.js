@@ -18,7 +18,9 @@ module.exports = class Container {
      * @private
      */
     _loadDefaultParameters(){
-        this._addParameter('app.root', process.cwd());
+        if(process !== undefined && process !== null) {
+            this._addParameter('app.root', process.cwd());
+        }
     }
 
     /**
