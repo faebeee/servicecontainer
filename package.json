@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git@github.com:faebeee/servicecontainer.git"
   },
-  "main": "ServiceContainer.js",
+  "main": "./src/ServiceContainer.js",
   "licenses": [
     {
       "type": "MIT",

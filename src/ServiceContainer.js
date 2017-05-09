@@ -1,9 +1,10 @@
 'use strict';
 
-let Container = require('./src/Container');
+let Container = require('./Container');
 
 /**
  * Construct a Builder object
+ * @module
  */
 module.exports = {
 

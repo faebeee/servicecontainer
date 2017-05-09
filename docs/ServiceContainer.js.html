@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Parser/NodeParser.js</title>
+    <title>JSDoc: Source: ServiceContainer.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Parser/NodeParser.js</h1>
+    <h1 class="page-title">Source: ServiceContainer.js</h1>
 
     
 
@@ -28,47 +28,23 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
-let Definition = require('../Definition');
-let AbstractParser = require('./AbstractParser');
-let path = require('path');
+let Container = require('./Container');
 
 /**
- * @class
+ * Construct a Builder object
+ * @module
  */
-class NodeParser extends AbstractParser{
+module.exports = {
+
     /**
      *
-     * @param {String} rootDir
+     * @param {String} file
+     * @returns {Container}
      */
-    constructor(rootDir) {
-        super();
-        this.rootDir = rootDir;
+    create(file) {
+        return new Container( file );
     }
-    
-    /**
-     * 
-     * @param {Object} data
-     * @param {Container} container
-     */
-    loadImport(data, container) {
-        if (data.imports === undefined || data.imports === null) {
-            return;
-        }    
-
-        let imports = data.imports;
-        let keys = Object.keys(imports);
-        for (let i = 0; i &lt; keys.length; i++){
-            let key = keys[i];
-            let value = imports[key];
-            let importFile = path.resolve(this.rootDir, value);
-
-            //let importFile = this.rootDir + value.replace('./', '/');
-            this.parse(require( importFile ), container)
-        }   
-    }
-}
-
-module.exports = NodeParser;</code></pre>
+};</code></pre>
         </article>
     </section>
 

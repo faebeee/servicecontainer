@@ -2,7 +2,7 @@
 
 let unit = require('unit.js');
 
-let ServiceContainer = require('../ServiceContainer');
+let ServiceContainer = require('../src/ServiceContainer');
 
 let MockService = require('./Mock/Mock.service');
 let OtherService = require('./Mock/Other.service');
