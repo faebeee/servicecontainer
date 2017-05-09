@@ -4,7 +4,10 @@ let Definition = require('../Definition');
 let AbstractParser = require('./AbstractParser');
 let path = require('path');
 
-module.exports = class NodeParser extends AbstractParser{
+/**
+ * @class
+ */
+class NodeParser extends AbstractParser{
     /**
      *
      * @param {String} rootDir
@@ -18,7 +21,6 @@ module.exports = class NodeParser extends AbstractParser{
      * 
      * @param {Object} data
      * @param {Container} container
-     * @returns
      */
     loadImport(data, container) {
         if (data.imports === undefined || data.imports === null) {
@@ -36,4 +38,6 @@ module.exports = class NodeParser extends AbstractParser{
             this.parse(require( importFile ), container)
         }   
     }
-};
+}
+
+module.exports = NodeParser;

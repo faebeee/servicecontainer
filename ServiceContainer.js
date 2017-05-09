@@ -1,8 +1,18 @@
 'use strict';
 
-let Builder = require('./src/Builder');
+let Container = require('./src/Container');
 
 /**
  * Construct a Builder object
  */
-module.exports = new Builder();
+module.exports = {
+
+    /**
+     *
+     * @param {String} file
+     * @returns {Container}
+     */
+    create(file) {
+        return new Container( file );
+    }
+};

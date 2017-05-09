@@ -1,17 +1,26 @@
-'use strict';
+
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
 let AbstractClassLoader = require('./AbstractClassLoader');
 
-module.exports = class WebClassLoader extends AbstractClassLoader{
+/**
+ * @class
+ */
+class ClassLoader extends AbstractClassLoader{
 
     /**
      *
-     * @param services
+     * @param {String} rootDir
      */
-    constructor( services ){
+    constructor(rootDir){
         super();
-        this.servicesClasses = services;
+        this.rootDir = rootDir;
     }
-   
 
     /**
      * Load classdefinition from module
@@ -40,13 +49,20 @@ module.exports = class WebClassLoader extends AbstractClassLoader{
             throw new Error('File is not defined in config');
         }
 
-        //classFile = def.rootDir + classFile.replace('./', '/');
-        if(this.servicesClasses[classFile] === null || this.servicesClasses[classFile] === undefined){
-            throw new Error('No service class for '+classFile);
+        // Check if the class file path is relative or absolute
+        classFile = classFile.replace(/^\.\.\//, './../');
+        if (/^\.\//.test(classFile)) {
+            // Remove references to the root dir
+            classFile = this.rootDir + classFile.replace('./', '/');
         }
-
-        return this.servicesClasses[classFile]
+        //classFile = def.rootDir + classFile.replace('./', '/');
+        return require(classFile);
     }
+}
 
-    
-};
+module.exports = ClassLoader;</code></pre>
+        </article>
+    </section>
+
+
+

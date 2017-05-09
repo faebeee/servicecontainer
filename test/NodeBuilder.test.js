@@ -10,7 +10,7 @@ let OtherService = require('./Mock/Other.service');
 describe('Node Builder', function () {
 
     before( () => {
-        this.container = ServiceContainer.buildFromFile(__dirname+'/Mock/Services.json');
+        this.container = ServiceContainer.create(__dirname+'/Mock/Services.json');
     });
 
     it('should create a container', () => {
@@ -31,7 +31,7 @@ describe('Node Builder', function () {
         unit.object(this.container.get('other')).isInstanceOf(OtherService);
     });
 
-    it('throw error when no no is given', () => {
+    it('throw error when no definition is given', () => {
         function loadServiceWithoutClassDef() {
             unit.object(this.container.get('mock2')).isNot(null);
         }
@@ -70,7 +70,6 @@ describe('Node Builder', function () {
     it('access objects', () => {
         unit.object(this.container.get('object')).isNot(null);
         unit.string(this.container.get('object').foo).is('bar');
-
     });
 
     it('get services by tag', () => {

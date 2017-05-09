@@ -22,9 +22,11 @@
     "node": ">=0.8.17"
   },
   "scripts": {
+    "doc": "node_modules/.bin/jsdoc --configure ./jsdoc.json",
     "test": "./node_modules/.bin/mocha test/*.test.js"
   },
   "devDependencies": {
+    "jsdoc": "^3.4.3",
     "mocha": "^3.2.0",
     "unit.js": "^2.0.0"
   },
