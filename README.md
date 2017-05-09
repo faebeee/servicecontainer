@@ -68,4 +68,4 @@ App.js
     
 # API
 
-[API Doc](./doc/index.html)
+[API Doc](docs/index.html)
