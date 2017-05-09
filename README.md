@@ -1,5 +1,7 @@
 # ServiceContainer
 
+![Build](https://circleci.com/gh/faebeee/servicecontainer/tree/master.svg?style=svg&circle-token=50472bb3d7dbbb77fd1138181c19d6ed84d87dfd)
+
 A servicecontainer build on javascript. It works with browserify, ES6, babel and so on
 
 # Install 
