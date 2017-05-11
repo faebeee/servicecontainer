@@ -13,7 +13,12 @@ Install the module using `npm`
 
 Checkout the working example on `/example/Node`
 
-## Config
+# Default Parameters
+
+## app.root
+    process.cwd
+
+# Config
 
 Parameters.json
 
@@ -38,6 +43,40 @@ Services.json
       }
     }
     
+## Service Object
+
+basically there are two types of services that can be configured. One is a class
+and the other is a object. Tha class will be instanciated when required. To object
+is a basic JSON object
+
+A service object can be configured like this:
+
+     "SERVICE_NAME": {
+        "file": RELATIVE_PATH_TO_CLASS_FILE,
+        "arguments" : ARRAY_OF_ARGUMENTS,
+        "tags" : ARRAY_OF_TAGS
+    }
+
+
+**Keys :** 
+
+`file` Relative path to the service file
+
+`arguments` Array of strings which reference either a service or a parameter.
+To reference a service add the servicename with `@` as prefix. If you need a parameter then wrap it with `%`.
+
+    "arguments" : ["@serviceName" ,"%parameter.name%"]
+
+
+`tags` Array of strings. The service can later be accessed by that string
+
+`isObject` Defines if the service is an object or an class. If the service is a class, the service will be created with 
+`new` otherwise it will be a basic json object.
+
+    
+    
+    
+    
 ## Services
 
 Hello.service.js
@@ -54,7 +93,9 @@ Hello.service.js
         }
     };
     
-## Applicaition
+## Application
+
+Check out the `/example` folder
  
 App.js
  
