@@ -1,32 +1,36 @@
 'use strict';
 
 let Definition = require('../Definition');
+let Path = require('path');
 
 /**
  * @class
  */
 class AbstractParser{
+
     /**
      *
-     * @param {String} rootDir
      */
-    constructor(rootDir) {
-        this.rootDir = rootDir;
+    constructor(servicesConfiguration) {
+        this.servicesConfiguration = servicesConfiguration;
+        this.configDir = Path.dirname(servicesConfiguration);
     }
-    
+
     /**
      * Parse data
      * @param {Object} data
      * @param {Container} container
+     * @param {String} folder
      */
-    parse(data, container) {
+    parse(data, container, folder) {
         if (data === null || data === undefined) {
             return;
         }
+        folder = folder || this.configDir;
 
-        this.loadImport(data, container);
+        this.loadImport(data, container, folder);
         this.loadParameters(data, container);
-        this.loadServices(data, container);
+        this.loadServices(data, container, folder);
     }
 
 
@@ -35,16 +39,22 @@ class AbstractParser{
      * @param {Object} data
      * @param {Container} container
      */
-    loadServices(data, container) {
-        if (data.services === undefined || data.services === null) {
+    loadServices(data, container, folder) {
+        if ((data.services === undefined || data.services === null) || data.services.length <= 0) {
             return;
-        }    
+        }
 
         let services = data.services;
         let keys = Object.keys(services);
         for (let i = 0; i < keys.length; i++){
             let key = keys[i];
             let value = services[key];
+
+            if ((value.file === undefined || value.file === null) || value.file.length <= 0) {
+                throw new Error('For for '+key+' missing!');
+            }
+
+            value.file = Path.resolve(folder, value.file);
             
             container._addDefinition(key,
                 this.createServiceDefinition(key, value)
@@ -59,7 +69,7 @@ class AbstractParser{
      * @param {Object} serviceConf
      * @returns {Definition}
      */
-    createServiceDefinition(name, serviceConf ) {
+    createServiceDefinition( name, serviceConf ) {
         let def = new Definition();
         
         def.name = name;
@@ -91,8 +101,22 @@ class AbstractParser{
      * @param {Object} data
      * @param {Container} container
      */
-    loadImport(data, container) {
-        throw new Error('Method not implemented');
+    loadImport(data, container, folder) {
+        if (data.imports === undefined || data.imports === null) {
+            return;
+        }
+
+
+        let imports = data.imports;
+        let keys = Object.keys(imports);
+        for (let i = 0; i < keys.length; i++){
+            let key = keys[i];
+            let value = imports[key];
+            let importFile = Path.resolve(folder, value);
+
+            //let importFile = this.rootDir + value.replace('./', '/');
+            this.parse(require( importFile ), container, Path.dirname(importFile))
+        }
     }
 }
 

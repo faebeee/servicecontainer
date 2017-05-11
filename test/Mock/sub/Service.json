@@ -1,0 +1,12 @@
+{
+  "services": {
+    "mock2": {
+      "file": "./Mock2.service.js",
+      "arguments" : []
+    },
+    "mock5": {
+      "file": "../Mock.service.js",
+      "arguments" : []
+    }
+  }
+}

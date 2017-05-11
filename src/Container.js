@@ -30,8 +30,8 @@ class Container {
      * @private
      */
     _load(){
-        let parser = new NodeParser( this.rootDir );
-        parser.parse(require( this.servicesConfiguration ), this);
+        let parser = new NodeParser( this.servicesConfiguration );
+        parser.parse(require( this.servicesConfiguration ), this, this.rootDir);
     }
 
     /**
@@ -66,7 +66,7 @@ class Container {
     _addDefinition(name, definition) {
 
         if(definition.file === null && definition.className === null) {
-            throw new Error('Neither a class nor a file is defined for service')
+            throw new Error('Neither a class nor a file is defined for service '+name)
         }
 
         definition.class = this._loadModuleClassDefiniton(definition);
@@ -96,16 +96,9 @@ class Container {
         }
 
         if(!classFile){
-            throw new Error('File is not defined in config');
+            throw new Error('File missing');
         }
 
-        // Check if the class file path is relative or absolute
-        classFile = classFile.replace(/^\.\.\//, './../');
-        if (/^\.\//.test(classFile)) {
-            // Remove references to the root dir
-            classFile = this.rootDir + classFile.replace('./', '/');
-        }
-        //classFile = def.rootDir + classFile.replace('./', '/');
         return require(classFile);
     }
 
@@ -117,7 +110,7 @@ class Container {
      */
     _createService( name ) {
         if (this.definitions[name] === undefined || this.definitions[name] === null) {
-            throw new Error('No definition for name ' + name);
+            throw new Error('No definition for name ' + name+'. ');
         }
 
         if(this.services[name] !== null && this.services[name] !== undefined){

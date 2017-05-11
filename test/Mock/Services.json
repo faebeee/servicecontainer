@@ -1,4 +1,7 @@
 {
+  "imports" : [
+    "./sub/Service.json"
+  ],
   "parameters" : {
     "hello.world" : "hello world",
     "foo" : "bar",
@@ -12,6 +15,10 @@
       "file": "./Mock.service.js",
       "arguments" : ["%foo%"],
       "tags" : ["mock"]
+    },
+    "mock3": {
+      "file": "./sub/Mock2.service.js",
+      "arguments" : []
     },
     "other": {
       "file": "./Other.service.js",
