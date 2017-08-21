@@ -18,6 +18,10 @@ Checkout the working example on `/example/Node`
 ## app.root
     process.cwd
 
+## app.env
+    process.env.NODE_ENV || 'prod'
+
+
 # Config
 
 Parameters.json
@@ -42,8 +46,23 @@ Services.json
         }
       }
     }
+
+(you can also just work with one single config file)
+
+    {
+        "parameters" : {
+            "name" : "foo bar"
+        }
     
-## Service Object
+        "services": {
+            "helloService": {
+                "file": "../Services/Hello.service.js",
+                "arguments" : ["%name%"]
+            }
+        }
+    }
+    
+## Configure a Service class/object
 
 basically there are two types of services that can be configured. One is a class
 and the other is a object. Tha class will be instanciated when required. To object
@@ -73,18 +92,14 @@ To reference a service add the servicename with `@` as prefix. If you need a par
 `isObject` Defines if the service is an object or an class. If the service is a class, the service will be created with 
 `new` otherwise it will be a basic json object.
 
-    
-    
-    
-    
-## Services
+## Create a Service class/object
 
 Hello.service.js
 
     'use strict';
     
     module.exports = class HelloService{
-        constructor(name){
+        constructor(name){ // recive all the arguments configured in the json file
             this.name = name;
         }
     
@@ -93,7 +108,7 @@ Hello.service.js
         }
     };
     
-## Application
+# Usage
 
 Check out the `/example` folder
  
@@ -106,6 +121,30 @@ App.js
     container.get('helloService').sayHello();
     
     console.log("Parameter : "+container.getParameter('name'));
+
+
+## Access the contianer
+You can access the created container from everywhere by either get the service
+
+    let myContainer = container.get('container')
+
+or reference it in the config
+
+    "services": {
+        "helloService": {
+          "file": "../Services/Hello.service.js",
+          "arguments" : [
+              "%name%",
+              "@container"
+            ]
+        }
+      }
+
+or since the container is cached in the module you can call (only works if you already created one before)
+
+    let ServiceContainer = require('servicecontainer')
+    let container = ServiceContainer.get();
+
     
 # API
 

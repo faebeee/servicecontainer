@@ -7,19 +7,35 @@ let ServiceContainer = require('../src/ServiceContainer');
 let MockService = require('./Mock/Mock.service');
 let OtherService = require('./Mock/Other.service');
 
-describe('Node Builder', function () {
+describe('ServiceContainer', function() {
 
-    before( () => {
-        this.container = ServiceContainer.create(__dirname+'/Mock/Services.json');
+    before(() => {
+        this.container = ServiceContainer.create(__dirname + '/Mock/Services.json');
     });
 
-    it('should create a container', () => {
+    it('create a container', () => {
         unit.object(this.container).isNot(null);
     });
 
+    it('get container as a service', () => {
+        unit.object(this.container.get('container')).isNot(null);
+        unit.object(this.container.get('container')).is(this.container);
+    });
+
+    it('check references', () => {
+        this.container._addParameters({ 'test2': true });
+
+        unit.bool(this.container.get('container').getParameter('test2')).isTrue()
+        unit.bool(ServiceContainer.get().getParameter('test2')).isTrue()
+        unit.bool(require('../src/ServiceContainer').get().getParameter('test2')).isTrue()
+    });
+
+    it('get container from module', () => {
+        unit.object(require('../src/ServiceContainer').get()).is(this.container);
+        unit.object(ServiceContainer.get()).is(this.container);
+    });
 
     it('get services', () => {
-
         unit.object(this.container.get('mock')).isNot(null);
         unit.object(this.container.get('mock')).isInstanceOf(MockService);
     });

@@ -11,7 +11,7 @@ const NodeParser = require('./Parser/NodeParser');
  */
 class Container {
 
-    constructor( servicesConfiguration ) {
+    constructor(servicesConfiguration) {
         this.services = {};
         this.definitions = {};
         this.parameters = {};
@@ -21,7 +21,6 @@ class Container {
         this.rootDir = Path.dirname(this.servicesConfiguration);
 
         this._load();
-
         this._loadDefaultParameters()
     }
 
@@ -29,20 +28,23 @@ class Container {
      * Load services given in the config file
      * @private
      */
-    _load(){
-        let parser = new NodeParser( this.servicesConfiguration );
-        parser.parse(require( this.servicesConfiguration ), this, this.rootDir);
+    _load() {
+        let parser = new NodeParser(this.servicesConfiguration);
+        parser.parse(require(this.servicesConfiguration), this, this.rootDir);
+
+        this._addService('container', this);
     }
 
     /**
      * Loading default parameters
      * @private
      */
-    _loadDefaultParameters(){
-        if(process !== undefined && process !== null) {
+    _loadDefaultParameters() {
+        if (process !== undefined && process !== null) {
             this._addParameters({
-                'app' : {
-                    'root' : process.cwd()
+                'app': {
+                    'root': process.cwd(),
+                    'env': process.env.NODE_ENV || 'prod'
                 }
             });
         }
@@ -53,7 +55,7 @@ class Container {
      * 
      * @param {Object} parameters
      */
-    _addParameters( parameters ) {
+    _addParameters(parameters) {
         this.parameters = merge.all([this.parameters, parameters]);
     }
 
@@ -65,8 +67,8 @@ class Container {
      */
     _addDefinition(name, definition) {
 
-        if(definition.file === null && definition.className === null) {
-            throw new Error('Neither a class nor a file is defined for service '+name)
+        if (definition.file === null && definition.className === null) {
+            throw new Error('Neither a class nor a file is defined for service ' + name)
         }
 
         definition.class = this._loadModuleClassDefiniton(definition);
@@ -79,9 +81,9 @@ class Container {
      * @param {Definition} def
      * @returns {Class|Object}
      */
-    _loadModuleClassDefiniton(def){
+    _loadModuleClassDefiniton(def) {
 
-        if(def.file === null){
+        if (def.file === null) {
             return;
         }
 
@@ -95,7 +97,7 @@ class Container {
             );
         }
 
-        if(!classFile){
+        if (!classFile) {
             throw new Error('File missing');
         }
 
@@ -108,12 +110,12 @@ class Container {
      * @param {String} name
      * @returns {Object}
      */
-    _createService( name ) {
+    _createService(name) {
         if (this.definitions[name] === undefined || this.definitions[name] === null) {
-            throw new Error('No definition for name ' + name+'. ');
+            throw new Error('No definition for name ' + name + '. ');
         }
 
-        if(this.services[name] !== null && this.services[name] !== undefined){
+        if (this.services[name] !== null && this.services[name] !== undefined) {
             return this.services[name];
         }
 
@@ -121,26 +123,38 @@ class Container {
         let _arguments = this._constructArguments(def.arguments);
 
         let serviceClass = def.class;
-        let service  = null;
+        let service = null;
 
-        if(def.isObject === true){
+        if (def.isObject === true) {
             service = serviceClass;
-        }else{
-            service = new (Function.prototype.bind.apply(serviceClass, [null].concat(_arguments)));
+        } else {
+            service = new(Function.prototype.bind.apply(serviceClass, [null].concat(_arguments)));
         }
 
-        this.services[name] = service;
-
+        this._addService(name, service);
         return service;
     }
 
-     /**
+    /**
+     * Add service to this continer
+     * 
+     * @param {String} name 
+     * @param {any} service 
+     * 
+     * @memberOf Container
+     */
+    _addService(name, service) {
+        this.services[name] = service;
+
+    }
+
+    /**
      * Construct the arguments as either services or parameters
      *
      * @param {Array} argumentReferences
      * @returns {Array} An array of constructed arguments and parameters
      */
-    _constructArguments (argumentReferences) {
+    _constructArguments(argumentReferences) {
         let _arguments = [];
         for (let i = 0; i < argumentReferences.length; i++) {
             _arguments.push(this._constructArgument(argumentReferences[i]));
@@ -149,17 +163,17 @@ class Container {
         return _arguments;
     }
 
-     /**
+    /**
      * Fills a parameter by replacing its letiable palceholders
      *
      * @param {String} parameter The name of the parameter
      * @returns {String} The filled parameter
      */
-    _fillParameter (parameter) {
+    _fillParameter(parameter) {
         let lets = parameter.match(/(%[a-zA-Z-_\.]*%)/g);
         if (null == lets) return parameter;
 
-        lets.forEach(function (current_let) {
+        lets.forEach(function(current_let) {
             let let_name = current_let.replace(/%/g, "");
             let value = this.getParameter(let_name);
             parameter = parameter.replace(current_let, value);
@@ -169,12 +183,12 @@ class Container {
     }
 
     /**
-    * 
-    * Transforms the raw argument name to the parameter name
-    *
-    * @param {String} argumentId
-    */    
-    _getParameterIdFromArgumentReference (argumentId) {
+     * 
+     * Transforms the raw argument name to the parameter name
+     *
+     * @param {String} argumentId
+     */
+    _getParameterIdFromArgumentReference(argumentId) {
         return argumentId.replace(/%/g, '');
     }
 
@@ -182,8 +196,8 @@ class Container {
      * Checks if a given argument is a service or a parameter
      * @param {String} arg
      * @return {Boolean}
-     */    
-    _isArgumentALiteral (arg) {
+     */
+    _isArgumentALiteral(arg) {
         if (typeof arg !== 'string') {
             return true;
         } else if (arg.indexOf('@') !== 0 && !(/^%[^%]+%$/.test(arg))) {
@@ -192,7 +206,7 @@ class Container {
             return false;
         }
     }
-    
+
     /**
      * Check if it's a service
      * 
@@ -213,7 +227,7 @@ class Container {
      *
      * @param {string} argumentId
      * @returns {String}
-     */    
+     */
     _getServiceIdFromArgumentReference(argumentId) {
         let stripped;
         stripped = argumentId.replace(/^@/, '');
@@ -227,7 +241,7 @@ class Container {
      * @param {String} reference
      * @returns {any}
      */
-    _constructArgument (reference) {
+    _constructArgument(reference) {
         let id, argParamId, argument;
 
         if (this._isArgumentALiteral(reference)) {
@@ -257,7 +271,7 @@ class Container {
      * @private
      * @returns {Object}
      */
-    _deepCopyObject( object ){
+    _deepCopyObject(object) {
         return JSON.parse(JSON.stringify(object));
     }
 
@@ -267,17 +281,17 @@ class Container {
      * @return {Array|*}
      * @private
      */
-    _getRecursiveParameterByName( name ){
+    _getRecursiveParameterByName(name) {
         let path = name.split('.');
         let params = this.parameters;
-        for(let i = 0; i < path.length; i++){
-            if(params === null){
+        for (let i = 0; i < path.length; i++) {
+            if (params === null) {
                 continue;
             }
 
-            if(params[ path[i] ] !== null && params[ path[i] ] != undefined){
-                params = params[ path[i] ];
-            }else{
+            if (params[path[i]] !== null && params[path[i]] != undefined) {
+                params = params[path[i]];
+            } else {
                 params = null;
             }
         }
@@ -290,12 +304,12 @@ class Container {
      * @param {String} name The name of the parameter
      * @returns {any} The value of the parameter
      */
-    getParameter (name) {
+    getParameter(name) {
 
         let parameter = null;
-        if((parameter = this._getRecursiveParameterByName(name)) === null){
-            if(this.parameters[name] === null || this.parameters[name] === undefined){
-                throw new Error('No parameter with name '+name);
+        if ((parameter = this._getRecursiveParameterByName(name)) === null) {
+            if (this.parameters[name] === null || this.parameters[name] === undefined) {
+                throw new Error('No parameter with name ' + name);
             }
             parameter = this.parameters[name];
         }
@@ -312,17 +326,17 @@ class Container {
      * @param tag
      * @returns {Array}
      */
-    getServicesByTag( tag ){
+    getServicesByTag(tag) {
         let keys = Object.keys(this.definitions);
         let len = keys.length;
 
         let services = [];
 
-        for(let i = 0; i < len; i++){
-            let def = this.definitions[ keys[ i ] ];
+        for (let i = 0; i < len; i++) {
+            let def = this.definitions[keys[i]];
             let tags = def.tags;
-            if(tags.indexOf( tag ) !== -1){
-                services.push( this.get( def.name ));
+            if (tags.indexOf(tag) !== -1) {
+                services.push(this.get(def.name));
             }
         }
 

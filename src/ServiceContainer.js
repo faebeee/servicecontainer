@@ -1,6 +1,7 @@
 'use strict';
 
-let Container = require('./Container');
+const Container = require('./Container');
+let container = null;
 
 /**
  * Construct a Builder object
@@ -9,11 +10,23 @@ let Container = require('./Container');
 module.exports = {
 
     /**
-     *
+     * Build a new container
      * @param {String} file
      * @returns {Container}
      */
     create(file) {
-        return new Container( file );
+        if (!container) {
+            container = new Container(file);;
+        }
+        return container;
+    },
+
+    /**
+     * Get created container
+     * 
+     * @returns {Container}
+     */
+    get() {
+        return container;
     }
 };
