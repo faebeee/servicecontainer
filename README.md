@@ -9,7 +9,7 @@ Install the module using `npm`
 
   `npm i servicecontainer --save`
 
-# Usage
+# Example
 
 Checkout the working example on `/example/Node`
 
@@ -22,7 +22,7 @@ Checkout the working example on `/example/Node`
     process.env.NODE_ENV || 'prod'
 
 
-# Config
+# Create Config
 
 Parameters.json
 
@@ -114,16 +114,18 @@ Check out the `/example` folder
  
 App.js
  
+    // load module
     let ServiceContainer = require('servicecontainer');
     
+    //create container with service configuration
     let container = ServiceContainer.create(__dirname+'/Config/Services.json');
     
+    //do what ever you want with your service
     container.get('helloService').sayHello();
-    
     console.log("Parameter : "+container.getParameter('name'));
 
 
-## Access the contianer
+## Access the container
 You can access the created container from everywhere by either get the service
 
     let myContainer = container.get('container')

@@ -22,6 +22,12 @@ describe('ServiceContainer', function() {
         unit.object(this.container.get('container')).is(this.container);
     });
 
+    it('get container as a reference', () => {
+        unit.object(this.container.get('testcontainer')).isNot(null);
+        unit.object(this.container.get('testcontainer').container).isNot();
+        unit.object(this.container.get('testcontainer').container).is(this.container);
+    });
+
     it('check references', () => {
         this.container._addParameters({ 'test2': true });
 

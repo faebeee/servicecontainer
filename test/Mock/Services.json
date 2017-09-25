@@ -28,6 +28,10 @@
     "object": {
       "file": "./Object.service.js",
       "isObject" : true
+    },
+    "testcontainer": {
+      "file": "./TestContainer.service.js",
+      "arguments" : ["@container"]
     }
   }
 }
