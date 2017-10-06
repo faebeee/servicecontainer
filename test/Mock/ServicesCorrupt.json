@@ -1,0 +1,9 @@
+{
+
+  "services": {
+    "corrupt": {
+      "file": "./Corrupt.service.js",
+      "arguments" : []
+    }
+  }
+}

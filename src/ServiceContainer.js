@@ -16,7 +16,7 @@ module.exports = {
      */
     create(file) {
         if (!container) {
-            container = new Container(file);;
+            container = new Container(file);
         }
         return container;
     },
@@ -28,5 +28,12 @@ module.exports = {
      */
     get() {
         return container;
+    },
+
+    /**
+     * Destroy current container
+     */
+    destroy(){
+        container = null;
     }
 };

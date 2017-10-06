@@ -126,8 +126,14 @@ class Container {
         let service = null;
 
         if (def.isObject === true) {
+            if(typeof serviceClass !== 'object'){
+                throw new Error('Service '+name+' is flagged as an object but it is a '+(typeof service));
+            }
             service = serviceClass;
         } else {
+            if(typeof serviceClass !== 'function'){
+                throw new Error('Service '+name+' cannot be created because it is a '+(typeof service));
+            }
             service = new(Function.prototype.bind.apply(serviceClass, [null].concat(_arguments)));
         }
 
