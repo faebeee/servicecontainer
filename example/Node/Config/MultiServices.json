@@ -1,0 +1,16 @@
+{
+  "imports" : [
+    "./Parameters.json"
+  ],
+
+  "services": {
+    "helloService": {
+      "file": "../Services/HelloService.js",
+      "arguments" : ["%name%"]
+    },
+    "myOtherHelloService": {
+      "file": "../Services/OtherHelloService.js",
+      "arguments" : ["@helloService"]
+    }
+  }
+}

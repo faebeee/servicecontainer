@@ -13,56 +13,19 @@ Install the module using `npm`
 
 Checkout the working example on `/example/Node`
 
-# Default Parameters
+# Setup
 
-## app.root
-    process.cwd
+## Create the config
 
-## app.env
-    process.env.NODE_ENV || 'prod'
+When we create a new container we have to provide a config file which holds the configurations
+of all available services
 
+    let container = ServiceContainer.create(__dirname+'/Config/Services.json');
 
-# Create Config
+Therefore we can create a single file with all the configurations in it or we can split it up into smaller
+and more maintainable pieces
 
-Parameters.json
-
-    {
-      "parameters" : {
-        "name" : "foo bar"
-      }
-    }
-
-Services.json
-
-    {
-      "imports" : [
-        "./Parameters.json"
-      ],
-    
-      "services": {
-        "helloService": {
-          "file": "../Services/Hello.service.js",
-          "arguments" : ["%name%"]
-        }
-      }
-    }
-
-(you can also just work with one single config file)
-
-    {
-        "parameters" : {
-            "name" : "foo bar"
-        }
-    
-        "services": {
-            "helloService": {
-                "file": "../Services/Hello.service.js",
-                "arguments" : ["%name%"]
-            }
-        }
-    }
-    
-## Configure a Service class/object
+### Config structure
 
 basically there are two types of services that can be configured. One is a class
 and the other is a object. Tha class will be instanciated when required. To object
@@ -92,9 +55,90 @@ To reference a service add the servicename with `@` as prefix. If you need a par
 `isObject` Defines if the service is an object or an class. If the service is a class, the service will be created with 
 `new` otherwise it will be a basic json object.
 
+
+### Single config file
+
+    {
+        "parameters" : {
+            "name" : "foo bar"
+        }
+    
+        "services": {
+            "helloService": {
+                "file": "../Services/HelloService.js",
+                "arguments" : ["%name%"]
+            }
+        }
+    }
+
+### Granular config files
+
+Parameters.json
+
+    {
+      "parameters" : {
+        "name" : "foo bar"
+      }
+    }
+
+Services.json
+
+    {
+      "imports" : [
+        "./Parameters.json"
+      ],
+    
+      "services": {
+        "helloService": {
+          "file": "../Services/HelloService.js",
+          "arguments" : ["%name%"]
+        }
+      }
+    }
+
+(you can also just work with one single config file)
+
+### Reference a parameter
+
+When you have some parameters that are required in a service like a hostname, username or directory path,
+you can setup a simple parameter in your config.
+
+     {
+        "parameters" : {
+            "name" : "foo bar"
+        }
+    }
+
+Now in your service configuration you can reference to that parameter when setting the arguments array
+
+    "services": {
+        "helloService": {
+          "file": "../Services/HelloService.js",
+          "arguments" : ["%name%", "%more.modular.approach.value%"] // <-- Access the value by the parameter name
+        }
+      }
+
+### Reference a service
+
+When you require another service within your service you can go a similar way like the one to reference a parameter.
+
+    "services": {
+        "helloService": {
+            "file": "../Services/HelloService.js",
+            "arguments" : ["%name%"]
+        },
+        "myOtherHelloService": {
+            "file": "../Services/OtherHelloService.js",
+            "arguments" : ["@helloService"] // <-- The name of the other service
+        }
+    }
+
+
 ## Create a Service class/object
 
-Hello.service.js
+A service is a class that provides some method and functionallity. That class can have additional dependencies and parameters that can be configured via our `json` file
+
+HelloService.js
 
     'use strict';
     
@@ -107,8 +151,8 @@ Hello.service.js
             console.log('Hi '+this.name)
         }
     };
-    
-# Usage
+
+## Start the container 
 
 Check out the `/example` folder
  
@@ -134,10 +178,10 @@ or reference it in the config
 
     "services": {
         "helloService": {
-          "file": "../Services/Hello.service.js",
+          "file": "../Services/HelloService.js",
           "arguments" : [
               "%name%",
-              "@container"
+              "@container" // <-- access the whole container
             ]
         }
       }
@@ -146,6 +190,16 @@ or since the container is cached in the module you can call (only works if you a
 
     let ServiceContainer = require('servicecontainer')
     let container = ServiceContainer.get();
+
+
+
+# Default Parameters
+
+## app.root
+    process.cwd
+
+## app.env
+    process.env.NODE_ENV || 'prod'
 
     
 # API
