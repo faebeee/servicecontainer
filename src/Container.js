@@ -1,9 +1,8 @@
 'use strict';
 
-const merge = require('deepmerge');
 const Path = require('path');
 
-const NodeParser = require('./Parser/NodeParser');
+const Loader = require('./Loader');
 
 
 /**
@@ -15,7 +14,6 @@ class Container {
         this.services = {};
         this.definitions = {};
         this.parameters = {};
-        this.instanciate = [];
 
         this.servicesConfiguration = servicesConfiguration;
         this.rootDir = Path.dirname(this.servicesConfiguration);
@@ -29,8 +27,8 @@ class Container {
      * @private
      */
     _load() {
-        let parser = new NodeParser(this.servicesConfiguration);
-        parser.parse(require(this.servicesConfiguration), this, this.rootDir);
+        let loader = new Loader(this.servicesConfiguration);
+        loader.load(require(this.servicesConfiguration), this, this.rootDir);
 
         this._addService('container', this);
     }
@@ -52,16 +50,16 @@ class Container {
 
     /**
      * Add parameter to container
-     * 
+     *
      * @param {Object} parameters
      */
     _addParameters(parameters) {
-        this.parameters = merge.all([this.parameters, parameters]);
+        this.parameters = Object.assign({}, this.parameters, parameters);
     }
 
     /**
      * Add definition to service
-     * 
+     *
      * @param {String} name
      * @param {Definition} definition
      */
@@ -126,15 +124,15 @@ class Container {
         let service = null;
 
         if (def.isObject === true) {
-            if(typeof serviceClass !== 'object'){
-                throw new Error('Service '+name+' is flagged as an object but it is a '+(typeof service));
+            if (typeof serviceClass !== 'object') {
+                throw new Error('Service ' + name + ' is flagged as an object but it is a ' + (typeof service));
             }
             service = serviceClass;
         } else {
-            if(typeof serviceClass !== 'function'){
-                throw new Error('Service '+name+' cannot be created because it is a '+(typeof service));
+            if (typeof serviceClass !== 'function') {
+                throw new Error('Service ' + name + ' cannot be created because it is a ' + (typeof service));
             }
-            service = new(Function.prototype.bind.apply(serviceClass, [null].concat(_arguments)));
+            service = new (Function.prototype.bind.apply(serviceClass, [null].concat(_arguments)));
         }
 
         this._addService(name, service);
@@ -143,10 +141,10 @@ class Container {
 
     /**
      * Add service to this continer
-     * 
-     * @param {String} name 
-     * @param {any} service 
-     * 
+     *
+     * @param {String} name
+     * @param {any} service
+     *
      * @memberOf Container
      */
     _addService(name, service) {
@@ -179,7 +177,7 @@ class Container {
         let lets = parameter.match(/(%[a-zA-Z-_\.]*%)/g);
         if (null == lets) return parameter;
 
-        lets.forEach(function(current_let) {
+        lets.forEach(function (current_let) {
             let let_name = current_let.replace(/%/g, "");
             let value = this.getParameter(let_name);
             parameter = parameter.replace(current_let, value);
@@ -189,7 +187,7 @@ class Container {
     }
 
     /**
-     * 
+     *
      * Transforms the raw argument name to the parameter name
      *
      * @param {String} argumentId
@@ -215,10 +213,10 @@ class Container {
 
     /**
      * Check if it's a service
-     * 
+     *
      * @param {String} argumentId
      * @returns {Boolean}
-     * 
+     *
      * @memberOf Container
      */
     _isArgumentAService(argumentId) {
@@ -351,7 +349,7 @@ class Container {
 
     /**
      * get a service
-     * 
+     *
      * @param {String} name
      * @returns {Object}
      */

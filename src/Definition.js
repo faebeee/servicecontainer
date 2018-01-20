@@ -3,7 +3,7 @@
 /**
  * @class
  */
-class Definition{
+class Definition {
     constructor() {
         this.file = null;
         this.arguments = null;

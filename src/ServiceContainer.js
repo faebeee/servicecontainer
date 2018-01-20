@@ -11,6 +11,7 @@ module.exports = {
 
     /**
      * Build a new container
+     *
      * @param {String} file
      * @returns {Container}
      */
@@ -23,7 +24,7 @@ module.exports = {
 
     /**
      * Get created container
-     * 
+     *
      * @returns {Container}
      */
     get() {
@@ -33,7 +34,7 @@ module.exports = {
     /**
      * Destroy current container
      */
-    destroy(){
+    destroy() {
         container = null;
     }
 };
