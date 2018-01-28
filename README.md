@@ -158,9 +158,18 @@ This gives you the ability to pass an object as a service.
 
 # Use a service
 After you created the config and `service` file, you can access the service and call it's methods. In addition the `container` created with `ServiceContainer.create` is cached in
-in the module. This gives you the ability to load the `servicecontainer` module everywhere in your code. Then you can call `.get` on the module and you'll get the current
+the module. This gives you the ability to load the `servicecontainer` module everywhere in your code. Then you can call `.get` on the module and you'll get the current
 container instance.
     
 # API
+## `.create(configFilePath:String) : Container`
+Create a new container instance. 
 
-[API Doc](docs/index.html)
+## `.get() : Container`
+Get the created container
+
+## `.destroy()`
+Destroy the currently active container
+
+# Complete API Doc
+[API Doc](https://faebeee.github.io/servicecontainer/)
