@@ -1,5 +1,7 @@
-let ServiceContainer = require('../../src/ServiceContainer');
+'use strict';
 
-let container = ServiceContainer.create(__dirname + '/Config/Services.json');
+const ServiceContainer = require('../../src');
+const env = process.env.NODE_ENV || 'prod'; 
+const container = ServiceContainer.create(__dirname + `/Config/Services.${env}.json`);
 
 container.get('helloService').sayHello();

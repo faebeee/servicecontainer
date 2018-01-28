@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Definition.js</title>
+    <title>JSDoc: Source: index.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Definition.js</h1>
+    <h1 class="page-title">Source: index.js</h1>
 
     
 
@@ -28,19 +28,44 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
-/**
- * @class
- */
-class Definition {
-    constructor() {
-        this.file = null;
-        this.arguments = null;
-        this.class = null;
-        this.tags = null;
-    }
-}
+const Container = require('./Container');
+let container = null;
 
-module.exports = Definition;
+/**
+ * Construct a Builder object
+ * @module
+ */
+module.exports = {
+
+    /**
+     * Build a new container
+     *
+     * @param {String} file
+     * @returns {Container}
+     */
+    create(file) {
+        if (!container) {
+            container = new Container(file);
+        }
+        return container;
+    },
+
+    /**
+     * Get created container
+     *
+     * @returns {Container}
+     */
+    get() {
+        return container;
+    },
+
+    /**
+     * Destroy current container
+     */
+    destroy() {
+        container = null;
+    }
+};
 </code></pre>
         </article>
     </section>

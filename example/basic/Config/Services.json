@@ -5,7 +5,7 @@
 
   "services": {
     "helloService": {
-      "file": "../Services/Hello.service.js",
+      "file": "../Services/HelloService.js",
       "arguments" : ["%name%"]
     }
   }
