@@ -2,7 +2,7 @@
 
 let unit = require('unit.js');
 
-let ServiceContainer = require('../src/ServiceContainer');
+let ServiceContainer = require('../src/index');
 
 let MockService = require('./Mock/Mock.service');
 let OtherService = require('./Mock/Other.service');
@@ -55,11 +55,11 @@ describe('ServiceContainer', function () {
 
             unit.bool(this.container.get('container').getParameter('test2')).isTrue()
             unit.bool(ServiceContainer.get().getParameter('test2')).isTrue()
-            unit.bool(require('../src/ServiceContainer').get().getParameter('test2')).isTrue()
+            unit.bool(require('../src/index').get().getParameter('test2')).isTrue()
         });
 
         it('get container from module', () => {
-            unit.object(require('../src/ServiceContainer').get()).is(this.container);
+            unit.object(require('../src/index').get()).is(this.container);
             unit.object(ServiceContainer.get()).is(this.container);
         });
 

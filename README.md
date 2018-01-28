@@ -195,11 +195,11 @@ or since the container is cached in the module you can call (only works if you a
 
 # Default Parameters
 
-## app.root
-    process.cwd
 
-## app.env
-    process.env.NODE_ENV || 'prod'
+| Command | Description |
+| --- | --- |
+| `app.root` | `process.cwd` |
+| `app.env` | `process.env.NODE_ENV` |
 
     
 # API
