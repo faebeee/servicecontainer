@@ -2,7 +2,7 @@
 
 ![Build](https://circleci.com/gh/faebeee/servicecontainer/tree/master.svg?style=svg&circle-token=50472bb3d7dbbb77fd1138181c19d6ed84d87dfd)
 
-A servicecontainer build on javascript. It works with browserify, ES6, babel and so on
+`servicecontainer` is a zero dependency dependency injection for nodejs applications. 
 
 # Install 
 Install the module using `npm`
@@ -11,196 +11,155 @@ Install the module using `npm`
 
 # Example
 
-Checkout the working example on `/example/Node`
+Checkout the working example on `/example`
 
 # Setup
 
-## Create the config
+## Create the service configuration file
+All the service definitions are configured in a `json` file. Therefore we create 
+a `/config` folder in your application (It doesn't have to be in the app root since the
+file reference is relative to the config file).
 
-When we create a new container we have to provide a config file which holds the configurations
-of all available services
-
-    let container = ServiceContainer.create(__dirname+'/Config/Services.json');
-
-Therefore we can create a single file with all the configurations in it or we can split it up into smaller
-and more maintainable pieces
-
-### Config structure
-
-basically there are two types of services that can be configured. One is a class
-and the other is a object. Tha class will be instanciated when required. To object
-is a basic JSON object
-
-A service object can be configured like this:
-
-     "SERVICE_NAME": {
-        "file": RELATIVE_PATH_TO_CLASS_FILE,
-        "arguments" : ARRAY_OF_ARGUMENTS,
-        "tags" : ARRAY_OF_TAGS
-    }
-
-
-**Keys :** 
-
-`file` Relative path to the service file
-
-`arguments` Array of strings which reference either a service or a parameter.
-To reference a service add the servicename with `@` as prefix. If you need a parameter then wrap it with `%`.
-
-    "arguments" : ["@serviceName" ,"%parameter.name%"]
-
-
-`tags` Array of strings. The service can later be accessed by that string
-
-`isObject` Defines if the service is an object or an class. If the service is a class, the service will be created with 
-`new` otherwise it will be a basic json object.
-
-
-### Single config file
-
-    {
-        "parameters" : {
-            "name" : "foo bar"
-        }
+The config file looks something like this
     
-        "services": {
-            "helloService": {
-                "file": "../Services/HelloService.js",
-                "arguments" : ["%name%"]
-            }
-        }
-    }
-
-### Granular config files
-
-Parameters.json
-
-    {
+    {  
       "parameters" : {
         "name" : "foo bar"
       }
-    }
-
-Services.json
-
-    {
-      "imports" : [
-        "./Parameters.json"
-      ],
-    
       "services": {
         "helloService": {
-          "file": "../Services/HelloService.js",
+          "file": "../Services/Hello.service.js",
           "arguments" : ["%name%"]
         }
       }
     }
-
-(you can also just work with one single config file)
-
-### Reference a parameter
-
-When you have some parameters that are required in a service like a hostname, username or directory path,
-you can setup a simple parameter in your config.
-
-     {
-        "parameters" : {
-            "name" : "foo bar"
-        }
-    }
-
-Now in your service configuration you can reference to that parameter when setting the arguments array
-
-    "services": {
-        "helloService": {
-          "file": "../Services/HelloService.js",
-          "arguments" : ["%name%", "%more.modular.approach.value%"] // <-- Access the value by the parameter name
-        }
-      }
-
-### Reference a service
-
-When you require another service within your service you can go a similar way like the one to reference a parameter.
-
-    "services": {
-        "helloService": {
-            "file": "../Services/HelloService.js",
-            "arguments" : ["%name%"]
-        },
-        "myOtherHelloService": {
-            "file": "../Services/OtherHelloService.js",
-            "arguments" : ["@helloService"] // <-- The name of the other service
-        }
-    }
-
-
-## Create a Service class/object
-
-A service is a class that provides some method and functionallity. That class can have additional dependencies and parameters that can be configured via our `json` file
-
-HelloService.js
-
-    'use strict';
     
-    module.exports = class HelloService{
-        constructor(name){ // recive all the arguments configured in the json file
+The config file has 3 main keys `parameters`, `services` and `imports`
+
+- `parameters` Will contain configurations for services (these will be parameters like 
+portnumber and other config objects). These might be different depending on the environment
+
+- `services` Here all available services are configured. The keys have to be unique since that
+is the key you pass to retrieve the service.
+
+- `imports` here you can import other configurations files. This way you can have a more granular configuration and
+it makes it easier to have different parameters per environment and not have to write duplicated service configuration 
+
+## Create a container and load the configuration
+Now that we have our configuration we are ready to create a container. Therefore we have to load the `servicecontainer` code.
+Thats done by
+
+    const ServiceContainer = require('servicecontainer');
+    
+Next we create a new container instance by calling `create` with the configfile as parameter on `ServiceContainer`
+
+    let container = ServiceContainer.create(__dirname+'/config/service.json');
+
+This normaly goes where your application boots/starts. Something like `/index.js` but
+it's not mandatory.
+
+## Use service
+Now that we have everything up and running, we can access the configured service.
+That is done by calling `get` on the container and passing the service key from the configuration file.
+
+    container.get('helloService').myFancyMethod();
+
+
+# Create a service
+To create a service we have two steps to do. First create your class.
+
+Example: HelloService.js
+
+    module.exports = class HelloService {
+        constructor(name){
             this.name = name;
         }
-    
-        sayHello(){
-            console.log('Hi '+this.name)
+        
+        myMethod1(){
+            ...
         }
-    };
 
-## Start the container 
-
-Check out the `/example` folder
- 
-App.js
- 
-    // load module
-    let ServiceContainer = require('servicecontainer');
-    
-    //create container with service configuration
-    let container = ServiceContainer.create(__dirname+'/Config/Services.json');
-    
-    //do what ever you want with your service
-    container.get('helloService').sayHello();
-    console.log("Parameter : "+container.getParameter('name'));
-
-
-## Access the container
-You can access the created container from everywhere by either get the service
-
-    let myContainer = container.get('container')
-
-or reference it in the config
-
-    "services": {
-        "helloService": {
-          "file": "../Services/HelloService.js",
-          "arguments" : [
-              "%name%",
-              "@container" // <-- access the whole container
-            ]
+        myMethod2(){
+            ...
         }
-      }
+    }
 
-or since the container is cached in the module you can call (only works if you already created one before)
+You see it's very simple. Just a class which required a parameter called `name`. 
+That parameter will be passed by the `servicecontaine` module since it's configured
+in the config file 
+    
+    ...
+    "arguments" : ["%name%"]
+    ...
 
-    let ServiceContainer = require('servicecontainer')
-    let container = ServiceContainer.get();
+Now that we have created out class, we configure it in the config file and we are done.
+(Look above)
 
+# Configuration
+At the beginning the configuration can be a bit tricky. But I got your back!
+As mentioned above the configuration file exists of three parts. The `imports`,
+`parameters` and the `services`.
 
+## `imports`
+`imports` has to be an array. Here you can reference other configuration files. The 
+path to those files is relative to the current one. The `import` files will be 
+loaded prior to the current file. So if you have a parameter `name` in one of the imported
+files and tha same parameter in your current file, the current file overwrites the value.
 
-# Default Parameters
+To create some environment dependent config checkout the `example/environment` folder
 
+## `parameters`
+Parameters is a key value object. It's very simple
 
-| Command | Description |
-| --- | --- |
-| `app.root` | `process.cwd` |
-| `app.env` | `process.env.NODE_ENV` |
+    {
+        "parameters" : {
+            "name" : "foo bar",
+            "port" : 8000
+        }
+    }
 
+## `services`
+The service configuration is very straight foreward. The object has to have a unique key.
+This key is later used to get access to that class/service.
+The config object of that service has some keys you have to set and some are optional.
+
+|key|value|type|default|
+|---|---|---|---|
+|file|Relative path to the class file|required||
+|arguments|Array of parameters that are passed to the constructor when the service is created|required||
+|tags|Array of strings. You can get an array of services with the same tag|optional|`[]`|
+|isObject|Define if the service/class has to be instanciated with `new` when getting it |optional|`false`|
+
+### `arguments`
+You can pass three different types of parameters. A normal string, a reference to a `parameter` or an other `service`.
+
+Pass a string
+
+    "arguments" : ["hello"]
+
+Reference a parameter. Parameter key is wrapped with `%`
+
+    "arguments" : ["%hello%"]
+
+Reference another servcie. Prefix the service key/name with a `@`
+    
+    "arguments" : ["@helloService"]
+
+### `tags`
+You can define an array of tags. You can access multiple services with tha same tags later.
+That might be good when you have different eventlisteners, that have to be started 
+on application start. You can call `getServicesByTag` on the `container` object and pass
+the tag you want and you'll receive an array of services.
+
+### `isObject`
+You also have the possibility to add object as services and not classes.
+When `isObject` is set to `true` then the `service` will not bi instanciated with `new`.
+This gives you the ability to pass an object as a service.
+
+# Use a service
+After you created the config and `service` file, you can access the service and call it's methods. In addition the `container` created with `ServiceContainer.create` is cached in
+in the module. This gives you the ability to load the `servicecontainer` module everywhere in your code. Then you can call `.get` on the module and you'll get the current
+container instance.
     
 # API
 
