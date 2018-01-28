@@ -162,14 +162,25 @@ the module. This gives you the ability to load the `servicecontainer` module eve
 container instance.
     
 # API
-## `.create(configFilePath:String) : Container`
+## Module
+### `.create(configFilePath:String) : Container`
 Create a new container instance. 
 
-## `.get() : Container`
+### `.get() : Container`
 Get the created container
 
-## `.destroy()`
+### `.destroy()`
 Destroy the currently active container
+
+## Container
+### `.getParameter(name:String) : any`
+Get a parameter by it's name
+
+### `.getServicesByTag(tag:String) : Array`
+Get multiple services by the same tag
+
+### `.get(name:String) : any`
+Get service by it's name
 
 # Complete API Doc
 [API Doc](https://faebeee.github.io/servicecontainer/)
