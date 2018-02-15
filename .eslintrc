@@ -1,0 +1,83 @@
+{
+  "root": true,
+  "parser": "babel-eslint",
+  "extends": [
+    "@dreipol/eslint-config",
+    "plugin:react/recommended"
+  ],
+  "plugins": [
+    "react"
+  ],
+  "settings": {
+    "react/jsx-indent": [
+      "4",
+      "spaces"
+    ]
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "mocha": true
+  },
+  "globals": {
+    "Modernizr": true,
+    "globals": true
+  },
+  "rules": {
+    "camelcase": "off",
+    "react/no-string-refs": 0,
+    "react/sort-comp": [
+      1,
+      {
+        "order": [
+          "type-annotations",
+          "static-methods",
+          "base",
+          "lifecycle",
+          "eventlisteners",
+          "everything-else",
+          "rendering"
+        ],
+        "groups": {
+          "base": [
+            "/^state/",
+            "constructor"
+          ],
+          "eventlisteners": [
+            "/^on.+$/"
+          ],
+          "rendering": [
+            "/^render.+$/",
+            "render"
+          ],
+          "lifecycle": [
+            "componentWillMount",
+            "componentDidMount",
+            "componentWillReceiveProps",
+            "shouldComponentUpdate",
+            "componentWillUpdate",
+            "componentDidUpdate",
+            "componentWillUnmount",
+            "componentDidCatch"
+          ]
+        }
+      }
+    ],
+    "no-unused-vars": [
+      "error",
+      "all"
+    ],
+    "class-methods-use-this": [
+      0,
+      ""
+    ],
+    "operator-linebreak": [
+      0,
+      ""
+    ],
+    "multiline-ternary": [
+      0,
+      ""
+    ]
+  }
+}

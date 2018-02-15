@@ -3,6 +3,6 @@ export default class Definition {
     file: string;
     arguments: Array<any>;
     class: Object;
-    isObject: Boolean = false;
+    isObject: Boolean;
     tags: Array<string>;
 }
