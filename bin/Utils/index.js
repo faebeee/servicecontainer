@@ -47,3 +47,4 @@ function getServiceReference(arg) {
     return stripped;
 }
 exports.getServiceReference = getServiceReference;
+//# sourceMappingURL=index.js.map

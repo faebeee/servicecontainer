@@ -9,3 +9,4 @@ class Definition {
     }
 }
 exports.default = Definition;
+//# sourceMappingURL=index.js.map

@@ -34,3 +34,4 @@ module.exports = {
         container = null;
     }
 };
+//# sourceMappingURL=index.js.map

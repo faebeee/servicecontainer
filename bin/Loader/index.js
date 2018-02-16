@@ -107,3 +107,4 @@ class Loader {
     }
 }
 exports.default = Loader;
+//# sourceMappingURL=index.js.map
