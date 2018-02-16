@@ -13,6 +13,8 @@ Install the module using `npm`
 
 Checkout the working example on `/example`
 
+- Basic Express example [Repo](https://github.com/faebeee/servicecontainer-example-express)
+
 # Setup
 
 ## Create the service configuration file
