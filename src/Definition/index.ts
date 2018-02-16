@@ -1,3 +1,6 @@
+/** 
+ * @class
+*/
 export default class Definition {
     name: string;
     file: string;

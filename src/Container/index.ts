@@ -9,6 +9,9 @@ import {
     getServiceReference
 } from "../Utils";
 
+/** 
+ * @class
+*/
 export default class Container {
     services: Object = {};
     definitions: Object = {};
@@ -69,7 +72,7 @@ export default class Container {
      * Load the source for the module
      *
      * @param {Definition} def
-     * @returns Object
+     * @returns {Object}
      * @memberof Container
      */
     _loadModuleClassDefinition(def: Definition): Object {
@@ -94,7 +97,7 @@ export default class Container {
      * Get definition by name
      *
      * @param {string} name
-     * @returns Definition
+     * @returns {Definition}
      * @memberof Container
      */
     _getDefinitionByName(name: string): Definition | null {
@@ -137,7 +140,7 @@ export default class Container {
      *
      *
      * @param {Array<string>} args
-     * @returns
+     * @returns {Array<any>}
      * @memberof Container
      */
     _constructArguments(args: Array<string>): Array<any> {
@@ -154,7 +157,7 @@ export default class Container {
      * Check if parameter consists of multiple references like `%app.name%/%env.dir%/%path.to.whatever%`
      *
      * @param {string} parameter
-     * @returns String
+     * @returns {string}
      * @memberof Container
      */
     _fillParameter(parameter: string): string {
@@ -175,7 +178,7 @@ export default class Container {
      * Build up the argument that has to be passed to the service constructor
      *
      * @param {string} reference
-     * @returns Any
+     * @returns {any}
      * @memberof Container
      */
     _constructArgument(reference: string): any {
@@ -203,7 +206,7 @@ export default class Container {
      * Access parameter by given path like `app.namespace.app.config`
      *
      * @param {string} name
-     * @returns Boolean|Number|String|Object
+     * @returns {Boolean|Number|String|Object}
      * @memberof Container
      */
     _getRecursiveParameterByName(name: string): any {
@@ -227,7 +230,7 @@ export default class Container {
      * Instanciate a service if required
      *
      * @param {string} name
-     * @returns Object
+     * @returns {Object}
      * @memberof Container
      */
     _createService(name: string): Object {
@@ -267,7 +270,7 @@ export default class Container {
      * Get parameter
      *
      * @param {string} name
-     * @returns Boolean|Number|String|Object
+     * @returns {Boolean|Number|String|Object}
      * @memberof Container
      */
     getParameter(name: string): any {
@@ -293,7 +296,7 @@ export default class Container {
      * Get services by tag
      *
      * @param {string} tag
-     * @returns Array<Object>
+     * @returns {Array<Object>}
      * @memberof Container
      */
     getServicesByTag(tag: string): Array<Object> {
