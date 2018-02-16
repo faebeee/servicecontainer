@@ -34,7 +34,7 @@ export default class Container {
      * @returns Object
      * @memberof Container
      */
-    _loadModuleClassDefinition(def: Definition): any;
+    _loadModuleClassDefinition(def: Definition): Object;
     /**
      * Get definition by name
      *
@@ -90,7 +90,7 @@ export default class Container {
      * @returns Boolean|Number|String|Object
      * @memberof Container
      */
-    _getRecursiveParameterByName(name: string): Object;
+    _getRecursiveParameterByName(name: string): any;
     /**
      * Instanciate a service if required
      *
@@ -98,7 +98,7 @@ export default class Container {
      * @returns Object
      * @memberof Container
      */
-    _createService(name: string): any;
+    _createService(name: string): Object;
     /**
      * Add parameters to the container
      *
@@ -121,12 +121,12 @@ export default class Container {
      * @returns Array<Object>
      * @memberof Container
      */
-    getServicesByTag(tag: string): any[];
+    getServicesByTag(tag: string): Array<Object>;
     /**
      * get a service
      *
      * @param {String} name
      * @returns {Object}
      */
-    get(name: string): any;
+    get(name: string): Object;
 }

@@ -9,7 +9,7 @@ export default class Loader {
     configDir: string;
     /**
      *
-     * @param {Object} servicesConfiguration
+     * @param {String} servicesConfigurationFile
      */
     constructor(servicesConfigurationFile: string);
     /**

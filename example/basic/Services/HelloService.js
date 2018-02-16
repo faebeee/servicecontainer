@@ -6,6 +6,6 @@ module.exports = class HelloService {
     }
 
     sayHello() {
-        console.log('Hi ' + this.name)
+        console.log('Hi ' + this.name);
     }
 };

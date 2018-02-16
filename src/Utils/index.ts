@@ -3,7 +3,7 @@
  * @param {string} arg
  * @returns Boolean
  */
-export function isParameterReference(arg: string) {
+export function isParameterReference(arg: string): Boolean {
     if (/%[^%]+%$/.test(arg)) {
         return true;
     } else {
@@ -17,7 +17,7 @@ export function isParameterReference(arg: string) {
  * @param {string}arg 
  * @returns Boolean
  */
-export function isServiceReference(arg: string){
+export function isServiceReference(arg: string): Boolean{
     return arg.indexOf("@") === 0;
 }
 
@@ -27,7 +27,7 @@ export function isServiceReference(arg: string){
  * @param {string} arg 
  * @returns String
  */
-export function getParameterReferenceName(arg: string) {
+export function getParameterReferenceName(arg: string): string {
     return arg.replace(/%/g, '');
 }
 
@@ -37,7 +37,7 @@ export function getParameterReferenceName(arg: string) {
  * @param {stirng} arg 
  * @requires String
  */
-export function getServiceReference(arg :string){
+export function getServiceReference(arg :string): string{
      let stripped;
     stripped = arg.replace(/^@/, '');
     stripped = stripped.replace(/^\?/, '');

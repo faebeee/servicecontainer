@@ -72,7 +72,7 @@ export default class Container {
      * @returns Object
      * @memberof Container
      */
-    _loadModuleClassDefinition(def: Definition) {
+    _loadModuleClassDefinition(def: Definition): Object {
         if (def.file === null) {
             return null;
         }
@@ -157,7 +157,7 @@ export default class Container {
      * @returns String
      * @memberof Container
      */
-    _fillParameter(parameter: string) {
+    _fillParameter(parameter: string): string {
         let references = parameter.match(/(%[a-zA-Z-_\.]*%)/g);
         if (null === references) return parameter;
 
@@ -178,7 +178,7 @@ export default class Container {
      * @returns Any
      * @memberof Container
      */
-    _constructArgument(reference: string) {
+    _constructArgument(reference: string): any {
         let argument = null;
 
         if (isParameterReference(reference)) {
@@ -206,7 +206,7 @@ export default class Container {
      * @returns Boolean|Number|String|Object
      * @memberof Container
      */
-    _getRecursiveParameterByName(name: string) {
+    _getRecursiveParameterByName(name: string): any {
         let path = name.split(".");
         let params = this.parameters;
         for (let i = 0; i < path.length; i++) {
@@ -230,7 +230,7 @@ export default class Container {
      * @returns Object
      * @memberof Container
      */
-    _createService(name: string) {
+    _createService(name: string): Object {
         const definition = this._getDefinitionByName(name);
         if (!definition) {
             throw new Error(`No definition found for ${name}`);
@@ -270,7 +270,7 @@ export default class Container {
      * @returns Boolean|Number|String|Object
      * @memberof Container
      */
-    getParameter(name: string) {
+    getParameter(name: string): any {
         let parameter = null;
         if ((parameter = this._getRecursiveParameterByName(name)) === null) {
             if (
@@ -296,7 +296,7 @@ export default class Container {
      * @returns Array<Object>
      * @memberof Container
      */
-    getServicesByTag(tag: string) {
+    getServicesByTag(tag: string): Array<Object> {
         let keys = Object.keys(this.definitions);
         let len = keys.length;
 
@@ -319,7 +319,7 @@ export default class Container {
      * @param {String} name
      * @returns {Object}
      */
-    get(name: string) {
+    get(name: string): Object {
         const service = this._getServiceByName(name);
         if (service) {
             return service;

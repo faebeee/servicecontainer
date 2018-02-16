@@ -14,7 +14,7 @@ export default class Loader {
 
     /**
      *
-     * @param {Object} servicesConfiguration
+     * @param {String} servicesConfigurationFile
      */
     constructor(servicesConfigurationFile: string) {
         this.servicesConfigurationFile = servicesConfigurationFile;
@@ -28,7 +28,7 @@ export default class Loader {
      * @param {Container} container
      * @param {String} folder
      */
-    load(data: ConfigInterface, container: Container, folder?: string) {
+    load(data: ConfigInterface, container: Container, folder?: string): void {
         if (data === null || data === undefined) {
             return;
         }
@@ -88,7 +88,7 @@ export default class Loader {
      * @param {Object} serviceConf
      * @returns {Definition}
      */
-    createServiceDefinition(name: string, serviceConf: ServiceConfigInterface) {
+    createServiceDefinition(name: string, serviceConf: ServiceConfigInterface) : Definition {
         let def = new Definition();
 
         def.name = name;
@@ -106,7 +106,7 @@ export default class Loader {
      * @param {Object} data
      * @param {Container} container
      */
-    loadParameters(data: ConfigInterface, container: Container) {
+    loadParameters(data: ConfigInterface, container: Container) : void {
         if (data.parameters === undefined || data.parameters === null) {
             return;
         }
@@ -121,7 +121,7 @@ export default class Loader {
      * @param {Object} data
      * @param {Container} container
      */
-    loadImport(data: ConfigInterface, container: Container, folder: string) {
+    loadImport(data: ConfigInterface, container: Container, folder: string): void {
         if (data.imports === undefined || data.imports === null) {
             return;
         }

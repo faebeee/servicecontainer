@@ -8,7 +8,7 @@ const path_1 = require("path");
 class Loader {
     /**
      *
-     * @param {Object} servicesConfiguration
+     * @param {String} servicesConfigurationFile
      */
     constructor(servicesConfigurationFile) {
         this.servicesConfigurationFile = servicesConfigurationFile;
