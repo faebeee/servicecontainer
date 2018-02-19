@@ -3,7 +3,7 @@
 let unit = require("unit.js");
 let path = require("path");
 
-let ServiceContainer = require("../src");
+let ServiceContainer = require("../");
 
 let MockService = require("./Mock/Mock.service");
 let OtherService = require("./Mock/Other.service");
@@ -39,7 +39,7 @@ describe("Container", function() {
         unit.bool(ServiceContainer.get().getParameter("test2")).isTrue();
         unit
             .bool(
-                require("../src/index")
+                require("../")
                     .get()
                     .getParameter("test2")
             )

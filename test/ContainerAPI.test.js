@@ -3,7 +3,7 @@
 let unit = require('unit.js');
 let path = require('path');
 
-const Container = require("../src/Container").default;
+const Container = require("../bin/Container").default;
 
 let MockService = require('./Mock/Mock.service');
 let OtherService = require('./Mock/Other.service');

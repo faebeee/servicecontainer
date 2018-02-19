@@ -1,7 +1,7 @@
 "use strict";
 
 const unit = require("unit.js");
-const { isParameterReference } = require("../src/Utils");
+const { isParameterReference } = require("../bin/Utils");
 
 describe("Utils", function() {
     describe("isParameterReference", function() {
