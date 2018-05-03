@@ -12,6 +12,7 @@
     "url": "git@github.com:faebeee/servicecontainer.git"
   },
   "main": "./bin/index.js",
+  "types": "./bin/index.d.ts",
   "licenses": [
     {
       "type": "MIT",
