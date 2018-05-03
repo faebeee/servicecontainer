@@ -1,9 +1,10 @@
 "use strict";
 import Definition from "../Definition";
 import Container from "../Container";
-import { ConfigInterface, ServiceConfigInterface } from "../Interface";
 
 import { dirname, resolve } from "path";
+import {ConfigInterface} from "../Interfaces/ConfigInterface";
+import {ServiceConfigInterface} from "../Interfaces/ServiceConfigInterface";
 
 /**
  * @class
@@ -63,7 +64,7 @@ export default class Loader {
         let keys = Object.keys(services);
         for (let i = 0; i < keys.length; i++) {
             let key = keys[i];
-            let value = services[key];
+            let value: any = services[key];
 
             if (
                 value.file === undefined ||
@@ -89,7 +90,12 @@ export default class Loader {
      * @returns {Definition}
      */
     createServiceDefinition(name: string, serviceConf: ServiceConfigInterface) : Definition {
-        let def = new Definition();
+        let def = new Definition(name,
+            serviceConf.file || null,
+            serviceConf.arguments || null,
+            serviceConf.isObject || false,
+            serviceConf.tags || []
+        );
 
         def.name = name;
         def.file = serviceConf.file || null;
@@ -127,10 +133,8 @@ export default class Loader {
         }
 
         let imports = data.imports;
-        let keys = Object.keys(imports);
-        for (let i = 0; i < keys.length; i++) {
-            let key = keys[i];
-            let value = imports[key];
+        for (let i = 0; i < imports.length; i++) {
+            let value = imports[i];
             let importFile = resolve(folder, value);
 
             //let importFile = this.rootDir + value.replace('./', '/');

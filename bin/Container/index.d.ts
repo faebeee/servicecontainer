@@ -1,11 +1,14 @@
 import Definition from "../Definition";
+import NamedDefinitions from "../Interfaces/NamedDefinitions";
+import NamedServices from "../Interfaces/NamedServices";
+import Parameters from "../Interfaces/Parameters";
 /**
  * @class
-*/
+ */
 export default class Container {
-    services: Object;
-    definitions: Object;
-    parameters: Object;
+    services: NamedServices;
+    definitions: NamedDefinitions;
+    parameters: Parameters;
     additionalParameters: Object;
     serviceConfigurationFile: string;
     rootDir: string;
@@ -37,7 +40,7 @@ export default class Container {
      * @returns {Object}
      * @memberof Container
      */
-    _loadModuleClassDefinition(def: Definition): Object;
+    _loadModuleClassDefinition(def: Definition): Object | null;
     /**
      * Get definition by name
      *

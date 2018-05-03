@@ -3,12 +3,12 @@
 let unit = require("unit.js");
 let path = require("path");
 
-let ServiceContainer = require("../");
+let ServiceContainer = require("../").default;
 
 let MockService = require("./Mock/Mock.service");
 let OtherService = require("./Mock/Other.service");
 
-describe("Container", function() {
+describe("Container", function () {
     beforeEach(() => {
         this.container = ServiceContainer.create(
             path.join(__dirname, "/Mock/Services.json")
@@ -37,13 +37,8 @@ describe("Container", function() {
             .bool(this.container.get("container").getParameter("test2"))
             .isTrue();
         unit.bool(ServiceContainer.get().getParameter("test2")).isTrue();
-        unit
-            .bool(
-                require("../")
-                    .get()
-                    .getParameter("test2")
-            )
-            .isTrue();
+
+        unit.bool(require("../").default.get().getParameter("test2")).isTrue();
     });
 
     it("get services", () => {
@@ -53,10 +48,10 @@ describe("Container", function() {
 
     if (
         ("get service with parameterized filename",
-        () => {
-            unit.object(this.container.gett("variableServiceFile")).isNot(null);
-        })
-    );
+            () => {
+                unit.object(this.container.get("variableServiceFile")).isNot(null);
+            })
+    ) ;
 
     it("get multiple services", () => {
         unit.object(this.container.get("mock")).isNot(null);

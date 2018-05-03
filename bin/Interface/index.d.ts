@@ -4,9 +4,12 @@
  * @interface ConfigInterface
  */
 export interface ConfigInterface {
-    services: Object;
+    services: NamedServiceConfig;
     parameters: Object;
-    imports: Object;
+    imports: string[];
+}
+export interface NamedServiceConfig {
+    [key: string]: ServiceConfigInterface;
 }
 /**
  *
@@ -17,6 +20,6 @@ export interface ConfigInterface {
 export interface ServiceConfigInterface {
     file: string;
     arguments: Array<string>;
-    isObject: Boolean;
+    isObject: boolean;
     tags: Array<string>;
 }

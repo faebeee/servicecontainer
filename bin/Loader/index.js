@@ -64,7 +64,7 @@ class Loader {
      * @returns {Definition}
      */
     createServiceDefinition(name, serviceConf) {
-        let def = new Definition_1.default();
+        let def = new Definition_1.default(name, serviceConf.file || null, serviceConf.arguments || null, serviceConf.isObject || false, serviceConf.tags || []);
         def.name = name;
         def.file = serviceConf.file || null;
         def.arguments = serviceConf.arguments || [];
@@ -96,10 +96,8 @@ class Loader {
             return;
         }
         let imports = data.imports;
-        let keys = Object.keys(imports);
-        for (let i = 0; i < keys.length; i++) {
-            let key = keys[i];
-            let value = imports[key];
+        for (let i = 0; i < imports.length; i++) {
+            let value = imports[i];
             let importFile = path_1.resolve(folder, value);
             //let importFile = this.rootDir + value.replace('./', '/');
             this.load(require(importFile), container, path_1.dirname(importFile));

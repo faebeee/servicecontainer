@@ -1,7 +1,7 @@
 'use strict';
 
 import Container from './Container';
-let container = null;
+let container: Container | null = null;
 
 /**
  * Construct a Builder object
@@ -15,7 +15,7 @@ export default {
      * @param {String} file
      * @returns {Container}
      */
-    create(file, parameters: Object = {} ): Container {
+    create(file: string, parameters: Object = {} ): Container {
         if (!container) {
             container = new Container(file, parameters);
         }

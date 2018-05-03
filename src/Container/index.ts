@@ -1,4 +1,4 @@
-import { dirname } from "path";
+import {dirname} from "path";
 
 import Definition from "../Definition";
 import Loader from "../Loader";
@@ -8,18 +8,21 @@ import {
     isServiceReference,
     getServiceReference
 } from "../Utils";
+import NamedDefinitions from "../Interfaces/NamedDefinitions";
+import NamedServices from "../Interfaces/NamedServices";
+import Parameters from "../Interfaces/Parameters";
 
 /**
  * @class
-*/
+ */
 export default class Container {
-    services: Object = {};
-    definitions: Object = {};
-    parameters: Object = {};
+    services: NamedServices = {};
+    definitions: NamedDefinitions = {};
+    parameters: Parameters = {};
     additionalParameters: Object = {};
 
-    serviceConfigurationFile: string = null;
-    rootDir: string = null;
+    serviceConfigurationFile: string;
+    rootDir: string;
 
     constructor(
         serviceConfigurationFile: string,
@@ -75,7 +78,7 @@ export default class Container {
      * @returns {Object}
      * @memberof Container
      */
-    _loadModuleClassDefinition(def: Definition): Object {
+    _loadModuleClassDefinition(def: Definition): Object | null {
         if (def.file === null) {
             return null;
         }
@@ -220,7 +223,7 @@ export default class Container {
             if (params[path[i]] !== null && params[path[i]] != undefined) {
                 params = params[path[i]];
             } else {
-                params = null;
+                params = {};
             }
         }
         return params;

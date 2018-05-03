@@ -1,6 +1,7 @@
 import Definition from "../Definition";
 import Container from "../Container";
-import { ConfigInterface, ServiceConfigInterface } from "../Interface";
+import { ConfigInterface } from "../Interfaces/ConfigInterface";
+import { ServiceConfigInterface } from "../Interfaces/ServiceConfigInterface";
 /**
  * @class
  */

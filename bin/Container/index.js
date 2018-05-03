@@ -5,15 +5,13 @@ const Loader_1 = require("../Loader");
 const Utils_1 = require("../Utils");
 /**
  * @class
-*/
+ */
 class Container {
     constructor(serviceConfigurationFile, additionalParameters = {}) {
         this.services = {};
         this.definitions = {};
         this.parameters = {};
         this.additionalParameters = {};
-        this.serviceConfigurationFile = null;
-        this.rootDir = null;
         this.serviceConfigurationFile = serviceConfigurationFile;
         this.rootDir = path_1.dirname(serviceConfigurationFile);
         this.additionalParameters = additionalParameters;
@@ -191,7 +189,7 @@ class Container {
                 params = params[path[i]];
             }
             else {
-                params = null;
+                params = {};
             }
         }
         return params;
