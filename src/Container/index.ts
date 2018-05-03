@@ -93,7 +93,11 @@ export default class Container {
             throw new Error("No file in configuration");
         }
 
-        return require(classFile);
+        const classFileDef = require(classFile);
+        if (classFileDef.default) {
+            return classFileDef.default;
+        }
+        return classFileDef;
     }
 
     /**
@@ -249,10 +253,8 @@ export default class Container {
         if (definition.isObject === true) {
             service = serviceClass;
         } else {
-            service = new (Function.prototype.bind.apply(
-                serviceClass,
-                [null].concat(args)
-            ))();
+            console.log(serviceClass);
+            service = new (Function.prototype.bind.apply(serviceClass, [null].concat(args)))();
         }
 
         this._addService(name, service);

@@ -1,7 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
-const Loader_1 = require("../Loader");
+const Loader_1 = __importDefault(require("../Loader"));
 const Utils_1 = require("../Utils");
 /**
  * @class
@@ -71,7 +74,11 @@ class Container {
         if (!classFile) {
             throw new Error("No file in configuration");
         }
-        return require(classFile);
+        const classFileDef = require(classFile);
+        if (classFileDef.default) {
+            return classFileDef.default;
+        }
+        return classFileDef;
     }
     /**
      * Get definition by name
@@ -213,6 +220,7 @@ class Container {
             service = serviceClass;
         }
         else {
+            console.log(serviceClass);
             service = new (Function.prototype.bind.apply(serviceClass, [null].concat(args)))();
         }
         this._addService(name, service);
