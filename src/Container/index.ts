@@ -9,7 +9,7 @@ import {
     getServiceReference
 } from "../Utils";
 
-/** 
+/**
  * @class
 */
 export default class Container {
@@ -299,7 +299,7 @@ export default class Container {
      * @returns {Array<Object>}
      * @memberof Container
      */
-    getServicesByTag(tag: string): Array<Object> {
+    getServicesByTag<T>(tag: string): Array<T> {
         let keys = Object.keys(this.definitions);
         let len = keys.length;
 
@@ -322,12 +322,12 @@ export default class Container {
      * @param {String} name
      * @returns {Object}
      */
-    get(name: string): Object {
-        const service = this._getServiceByName(name);
+    get<T>(name: string): T {
+        const service = <T>this._getServiceByName(name);
         if (service) {
             return service;
         }
 
-        return this._createService(name);
+        return <T>this._createService(name);
     }
 }

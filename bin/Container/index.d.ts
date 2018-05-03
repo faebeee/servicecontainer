@@ -124,12 +124,12 @@ export default class Container {
      * @returns {Array<Object>}
      * @memberof Container
      */
-    getServicesByTag(tag: string): Array<Object>;
+    getServicesByTag<T>(tag: string): Array<T>;
     /**
      * get a service
      *
      * @param {String} name
      * @returns {Object}
      */
-    get(name: string): Object;
+    get<T>(name: string): T;
 }
