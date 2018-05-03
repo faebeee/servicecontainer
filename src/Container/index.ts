@@ -253,7 +253,6 @@ export default class Container {
         if (definition.isObject === true) {
             service = serviceClass;
         } else {
-            console.log(serviceClass);
             service = new (Function.prototype.bind.apply(serviceClass, [null].concat(args)))();
         }
 

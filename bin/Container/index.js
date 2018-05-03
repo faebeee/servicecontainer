@@ -220,7 +220,6 @@ class Container {
             service = serviceClass;
         }
         else {
-            console.log(serviceClass);
             service = new (Function.prototype.bind.apply(serviceClass, [null].concat(args)))();
         }
         this._addService(name, service);
