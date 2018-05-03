@@ -7,7 +7,7 @@ let container = null;
  * Construct a Builder object
  * @module
  */
-module.exports = {
+export default {
 
     /**
      * Build a new container
