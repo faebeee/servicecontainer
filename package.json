@@ -1,7 +1,7 @@
 {
   "name": "servicecontainer",
   "description": "Dependency injection for nodejs & browser environment",
-  "version": "7.0.1",
+  "version": "7.0.2",
   "author": {
     "name": "Fabio Gianini",
     "email": "faebeee@gmail.com"
