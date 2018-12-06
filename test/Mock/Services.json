@@ -1,42 +1,53 @@
 {
-  "imports" : [
-    "./sub/Service.json"
-  ],
-  "parameters" : {
-    "hello.world" : "hello world",
-    "foo" : "bar",
-    "test" : {
-      "name" : "world"
+    "imports": [
+        "./sub/Service.json"
+    ],
+    "parameters": {
+        "hello.world": "hello world",
+        "foo": "bar",
+        "test": {
+            "name": "world"
+        },
+        "ref": "%foo% bar",
+        "variableServiceFile": "./TestContainer.service.js",
+        "empty": null
     },
-    "ref" : "%foo% bar",
-    "variableServiceFile": "./TestContainer.service.js"
-  },
-  "services": {
-    "mock": {
-      "file": "./Mock.service.js",
-      "arguments" : ["%foo%"],
-      "tags" : ["mock"]
-    },
-    "mock3": {
-      "file": "./sub/Mock2.service.js",
-      "arguments" : []
-    },
-    "other": {
-      "file": "./Other.service.js",
-      "arguments" : ["@mock"],
-      "tags" : ["mock"]
-    },
-    "object": {
-      "file": "./Object.service.js",
-      "isObject" : true
-    },
-    "testcontainer": {
-      "file": "./TestContainer.service.js",
-      "arguments" : ["@container"]
-    },
-    "variableServiceFile": {
-      "file": "%variableServiceFile%",
-      "arguments" : []
+    "services": {
+        "mock": {
+            "file": "./Mock.service.js",
+            "arguments": [
+                "%foo%"
+            ],
+            "tags": [
+                "mock"
+            ]
+        },
+        "mock3": {
+            "file": "./sub/Mock2.service.js",
+            "arguments": []
+        },
+        "other": {
+            "file": "./Other.service.js",
+            "arguments": [
+                "@mock"
+            ],
+            "tags": [
+                "mock"
+            ]
+        },
+        "object": {
+            "file": "./Object.service.js",
+            "isObject": true
+        },
+        "testcontainer": {
+            "file": "./TestContainer.service.js",
+            "arguments": [
+                "@container"
+            ]
+        },
+        "variableServiceFile": {
+            "file": "%variableServiceFile%",
+            "arguments": []
+        }
     }
-  }
 }

@@ -119,6 +119,10 @@ describe("Container", function () {
         unit.string(this.container.getParameter("ref")).is("bar bar");
     });
 
+    it("get existent null parameter with reference", () => {
+        unit.value(this.container.getParameter("empty")).is(null);
+    });
+
     it("create with additional parameters", () => {
         ServiceContainer.destroy();
         this.container = ServiceContainer.create(

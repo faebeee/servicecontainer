@@ -93,7 +93,7 @@ export default class Container {
      * Access parameter by given path like `app.namespace.app.config`
      *
      * @param {string} name
-     * @returns {Boolean|Number|String|Object}
+     * @returns {Boolean|Number|String|Object|null}
      * @memberof Container
      */
     _getRecursiveParameterByName(name: string): any;

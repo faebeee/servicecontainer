@@ -2,12 +2,7 @@ import {dirname} from "path";
 
 import Definition from "../Definition";
 import Loader from "../Loader";
-import {
-    isParameterReference,
-    getParameterReferenceName,
-    isServiceReference,
-    getServiceReference
-} from "../Utils";
+import {getParameterReferenceName, getServiceReference, isParameterReference, isServiceReference} from "../Utils";
 import NamedDefinitions from "../Interfaces/NamedDefinitions";
 import NamedServices from "../Interfaces/NamedServices";
 import Parameters from "../Interfaces/Parameters";
@@ -213,7 +208,7 @@ export default class Container {
      * Access parameter by given path like `app.namespace.app.config`
      *
      * @param {string} name
-     * @returns {Boolean|Number|String|Object}
+     * @returns {Boolean|Number|String|Object|null}
      * @memberof Container
      */
     _getRecursiveParameterByName(name: string): any {
@@ -227,7 +222,7 @@ export default class Container {
             if (params[path[i]] !== null && params[path[i]] != undefined) {
                 params = params[path[i]];
             } else {
-                params = {};
+                return null;
             }
         }
         return params;
@@ -281,7 +276,6 @@ export default class Container {
         let parameter = null;
         if ((parameter = this._getRecursiveParameterByName(name)) === null) {
             if (
-                this.parameters[name] === null ||
                 this.parameters[name] === undefined
             ) {
                 throw new Error("No parameter with name " + name);
